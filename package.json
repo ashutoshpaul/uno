@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "",
+    "dev": "nodemon src/app.ts"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/ashutoshpaul/uno/issues"
   },
-  "homepage": "https://github.com/ashutoshpaul/uno#readme"
+  "homepage": "https://github.com/ashutoshpaul/uno#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "socket.io": "^4.5.1"
+  }
 }
