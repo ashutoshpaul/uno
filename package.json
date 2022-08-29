@@ -1,0 +1,19 @@
+{
+  "name": "uno",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashutoshpaul/uno.git"
+  },
+  "author": "Ashutosh Paul",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashutoshpaul/uno/issues"
+  },
+  "homepage": "https://github.com/ashutoshpaul/uno#readme"
+}
