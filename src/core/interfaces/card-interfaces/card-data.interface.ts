@@ -4,18 +4,18 @@ import { CARD_NUMBER, CARD_ACTION, CARD_WILD } from "src/core/enums/card-enums/c
 
 export interface INumberCard {
     number: CARD_NUMBER;
-    score: NumberCardPointsType,
+    points: NumberCardPointsType,
     color: ValidColorCodeType,
 }
 
 export interface IActionCard {
     action: CARD_ACTION,
-    score: ActionCardPointsType,
+    points: ActionCardPointsType,
     color: ValidColorCodeType,
 }
 
 export interface IWildCard {
     wild: CARD_WILD,
-    score: WildCardPointsType,
+    points: WildCardPointsType,
     readonly color: COLOR_CODE.black,
 }
