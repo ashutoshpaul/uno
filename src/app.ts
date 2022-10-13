@@ -2,23 +2,25 @@
  * @Author: Ashutosh 
  * @Date:   2022-08-30 02:05:12
  * @Last Modified by:   Ashutosh 
- * @Last Modified time: 2022-08-30 02:21:11
+ * @Last Modified time: 2022-08-30 04:15:25
  */
 
 console.log("hello");
 
-const http = require('http');
 const express = require('express');
+const socket = require('socket.io');
 
-const app = express()
-const server = http.createServer(http);
+const app = express();
 
-const socketio = require('socket.io')
-const io = socketio(server)
+const server = app.listen(3000, () => {
+  console.log('Started in 3000');
+});
 
-let count = 0 ; // count global variable 
+const io = socket(server);
 
-io.on('connection', (socket: any) => {
+let count: number = 0;
+
+io.sockets.on('connection', (socket: any) => {
   console.log('connected')
   socket.emit('updatecount',count)
   
@@ -30,8 +32,4 @@ io.on('connection', (socket: any) => {
   socket.on('disconnect', () => {
     console.log('server disconnected');
   });
-});
-
-server.listen(3000, () => {
-  console.log('server started');
 });
