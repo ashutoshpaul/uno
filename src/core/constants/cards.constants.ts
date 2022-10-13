@@ -8,6 +8,9 @@ const CARDS_PACK: ICard[] = [
     // NUMBER CARDS
     // blue
     { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+        color: COLOR_CODE.blue, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
+    }},
+    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
     { id: "", type: CARD_TYPE.number, data: <INumberCard>{
@@ -36,6 +39,9 @@ const CARDS_PACK: ICard[] = [
     }},
 
     // green
+    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+        color: COLOR_CODE.green, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
+    }},
     { id: "", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
@@ -66,6 +72,9 @@ const CARDS_PACK: ICard[] = [
 
     // red
     { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+        color: COLOR_CODE.red, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
+    }},
+    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
     { id: "", type: CARD_TYPE.number, data: <INumberCard>{
@@ -94,6 +103,9 @@ const CARDS_PACK: ICard[] = [
     }},
 
     // yellow
+    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+        color: COLOR_CODE.yellow, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
+    }},
     { id: "", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
@@ -176,5 +188,5 @@ const CARDS_PACK: ICard[] = [
     }},
 ];
 
-// total: 100 cards (excluding 8 blank cards)
+// total: 104 cards (excluding 4 blank cards)
 export const CARDS = [...CARDS_PACK, ...CARDS_PACK];
