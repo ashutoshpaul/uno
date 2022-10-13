@@ -7,183 +7,183 @@ import { ICard } from "../interfaces/card-interfaces/card.interface";
 const CARDS_PACK: ICard[] = [
     // NUMBER CARDS
     // blue
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-0", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-1", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-2", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.two, points: CARD_POINTS.two 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-3", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.three, points: CARD_POINTS.three 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-4", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.four, points: CARD_POINTS.four 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-5", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.five, points: CARD_POINTS.five 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-6", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.six, points: CARD_POINTS.six 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-7", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.seven, points: CARD_POINTS.seven 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-8", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.eight, points: CARD_POINTS.eight 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "blue-9", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.blue, number: CARD_NUMBER.nine, points: CARD_POINTS.nine 
     }},
 
     // green
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-0", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-1", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-2", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.two, points: CARD_POINTS.two 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-3", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.three, points: CARD_POINTS.three 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-4", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.four, points: CARD_POINTS.four 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-5", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.five, points: CARD_POINTS.five 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-6", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.six, points: CARD_POINTS.six 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-7", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.seven, points: CARD_POINTS.seven 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-8", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.eight, points: CARD_POINTS.eight 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "nine-9", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.nine, points: CARD_POINTS.nine 
     }},
 
     // red
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-0", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-1", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-2", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.two, points: CARD_POINTS.two 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-3", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.three, points: CARD_POINTS.three 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-4", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.four, points: CARD_POINTS.four 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-5", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.five, points: CARD_POINTS.five 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-6", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.six, points: CARD_POINTS.six 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-7", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.seven, points: CARD_POINTS.seven 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-8", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.eight, points: CARD_POINTS.eight 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "red-9", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.red, number: CARD_NUMBER.nine, points: CARD_POINTS.nine 
     }},
 
     // yellow
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-0", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-1", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-2", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.two, points: CARD_POINTS.two 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-3", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.three, points: CARD_POINTS.three 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-4", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.four, points: CARD_POINTS.four 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-5", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.five, points: CARD_POINTS.five 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-6", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.six, points: CARD_POINTS.six 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-7", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.seven, points: CARD_POINTS.seven 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-8", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.eight, points: CARD_POINTS.eight 
     }},
-    { id: "", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "yellow-9", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.yellow, number: CARD_NUMBER.nine, points: CARD_POINTS.nine 
     }},
 
     // ACTION CARDS
     // blue
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "blue-draw-2", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.blue, action: CARD_ACTION.drawTwoCards, points: CARD_POINTS.twenty
     }},
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "blue-reverse", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.blue, action: CARD_ACTION.reverse, points: CARD_POINTS.twenty
     }},
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "blue-skip", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.blue, action: CARD_ACTION.skip, points: CARD_POINTS.twenty
     }},
 
     // green
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "green-draw-2", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.green, action: CARD_ACTION.drawTwoCards, points: CARD_POINTS.twenty
     }},
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "green-reverse", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.green, action: CARD_ACTION.reverse, points: CARD_POINTS.twenty
     }},
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "green-skip", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.green, action: CARD_ACTION.skip, points: CARD_POINTS.twenty
     }},
 
     // red
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "red-draw-2", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.red, action: CARD_ACTION.drawTwoCards, points: CARD_POINTS.twenty
     }},
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "red-reverse", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.red, action: CARD_ACTION.reverse, points: CARD_POINTS.twenty
     }},
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "red-skip", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.red, action: CARD_ACTION.skip, points: CARD_POINTS.twenty
     }},
 
     // yellow
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "yellow-draw-2", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.yellow, action: CARD_ACTION.drawTwoCards, points: CARD_POINTS.twenty
     }},
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "yellow-reverse", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.yellow, action: CARD_ACTION.reverse, points: CARD_POINTS.twenty
     }},
-    { id: "", type: CARD_TYPE.action, data: <IActionCard>{
+    { id: "yellow-skip", type: CARD_TYPE.action, data: <IActionCard>{
         color: COLOR_CODE.yellow, action: CARD_ACTION.skip, points: CARD_POINTS.twenty
     }},
 
     // WILD CARDS
-    { id: "", type: CARD_TYPE.wild, data: <IWildCard>{
+    { id: "wild-change-color", type: CARD_TYPE.wild, data: <IWildCard>{
         color: COLOR_CODE.black, wild: CARD_WILD.changeColor, points: CARD_POINTS.fifty
     }},
-    { id: "", type: CARD_TYPE.wild, data: <IWildCard>{
+    { id: "wild-draw-4", type: CARD_TYPE.wild, data: <IWildCard>{
         color: COLOR_CODE.black, wild: CARD_WILD.drawFourCards, points: CARD_POINTS.fifty
     }},
 ];
