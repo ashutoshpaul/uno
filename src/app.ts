@@ -1,12 +1,3 @@
-/**
- * @Author: Ashutosh 
- * @Date:   2022-08-30 02:05:12
- * @Last Modified by:   Ashutosh 
- * @Last Modified time: 2022-08-30 04:15:25
- */
-
-console.log("hello");
-
 const express = require('express');
 const socket = require('socket.io');
 
