@@ -15,13 +15,12 @@ const server = app.listen(3000, () => {
 
 const redisClient = redisSetup.setup();
 
-const io = websocketSetup.setup(server);
+const socketIO = websocketSetup.setup(server);
 
-
-let count: number = 0;
-
-io.sockets.on('connection', (socket: any) => {
+socketIO.sockets.on('connection', (socket: any) => {
   console.log('connected', socket.id);
 
   WebsocketConfig.registerEvents(socket);
 });
+
+export {redisClient, socketIO };

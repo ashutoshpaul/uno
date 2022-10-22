@@ -2,6 +2,6 @@ import { IGame } from "./game.interface";
 
 export interface IRoom {
     id: string;
-    roomName: string;
+    name: string;
     game: IGame;
 }

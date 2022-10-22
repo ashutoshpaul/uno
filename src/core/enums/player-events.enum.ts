@@ -1,13 +1,16 @@
 // all actions performed by the player
 export const enum PLAYER_EVENTS {
-    play =  'play',
-    watch = 'watch',
+    play = 'play',
+    wait = 'wait', // wait for his/her turn to play
 
     createRoom = 'createRoom',
-    waiting = 'waiting', // waiting for other players to join
-    joined = 'joined', // all players joined
-    leave = 'leave', // leave the game
+    joinRoom = 'joinRoom',
+    leaveRoom = 'leaveRoom',
     deleteRoom = 'deleteRoom',
+
+    waitingForPlayersToJoinGame = 'waitingForPlayersToJoinGame', // waiting for other players to join
+    allJoinedGame = 'allJoinedGame', // all players joined
+    leaveGame = 'leaveGame', // leave the game
 
     offline = 'offline', // opponent went offline
     online = 'online', // opponent came back online
@@ -16,6 +19,7 @@ export const enum PLAYER_EVENTS {
     drawCard = 'drawCard',
     discard = 'discard', // throw card
     skipChance = 'skipChance', // when you already picked a card and don't want to discard
+    uno = 'uno', // player shouts UNO
 }
 
 /**
@@ -31,4 +35,9 @@ export const enum GAME_EVENTS {
 
     changeDirection = 'changeDirection',
     skipped = 'skipped',
+
+    // automatic events
+    shuffle = 'shuffle',
+    discardFirstCard = 'discardFirstCard',
+    distributeCards = 'distributeCards',
 }
