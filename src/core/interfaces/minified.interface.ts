@@ -10,9 +10,10 @@
 interface IMinifiedRoom {
   id: string;
   name: string;
+  createdBy?: IMinifiedPlayer;
 }
 
-interface IMinifiedPlayer {
+export interface IMinifiedPlayer {
   id: string;
   name: string;
 }

@@ -17,6 +17,10 @@ export class RoomService {
     };
 
     const room: IRoom = {
+      createdBy: {
+        id: player.id,
+        name: player.name,
+      },
       id: Uuid.generateUuid(),
       name: roomName,
       game: <IGame>{

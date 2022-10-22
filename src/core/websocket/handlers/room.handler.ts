@@ -20,6 +20,10 @@ export class RoomHandler {
         room: {
           id: room.id,
           name: room.name,
+          createdBy: {
+            id: room.game.players[0].id,
+            name: room.game.players[0].name,
+          }
         },
       };
 

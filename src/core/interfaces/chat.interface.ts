@@ -1,7 +1,7 @@
 import { IPlayer } from "./player.interface";
 
 export interface IChat {
-    player: IPlayer;
-    message: string;
-    time: string;
+  player: IPlayer;
+  message: string;
+  time: string;
 }

@@ -50,6 +50,7 @@ export class PlayerController {
         redis.hset('identities', data.socketId, JSON.stringify(identity));
       }
     }
+    return res.json({}); // triggers subscribed events in front-end. DON'T REMOVE.
   }
 
 }
