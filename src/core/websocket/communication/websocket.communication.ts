@@ -1,7 +1,7 @@
 import { GAME_EVENTS } from "src/core/enums/game-events.enum";
 import { PLAYER_EVENTS } from "src/core/enums/player-events.enum";
 import { RESPONSE_EVENTS } from "src/core/enums/response-events.enum";
-import { IMinifiedIdentity } from "src/core/interfaces/minified.interface";
+import { IMinifiedIdentity, IMinifiedRoom } from "src/core/interfaces/minified.interface";
 import { RoomHandler } from "../handlers/room.handler";
 
 export class WebsocketCommunication {
@@ -12,6 +12,7 @@ export class WebsocketCommunication {
       console.log(PLAYER_EVENTS.allJoinedGame);
     });
 
+    // Room Events
     socket.on(PLAYER_EVENTS.createRoom, async (playerName: string, roomName: string) => {
       console.log(PLAYER_EVENTS.createRoom);
       const identity: IMinifiedIdentity | null = await RoomHandler.createRoom(socket, playerName, roomName);
@@ -20,6 +21,11 @@ export class WebsocketCommunication {
       } else {
         socket.emit(RESPONSE_EVENTS.failed, null);
       }
+    });
+
+    socket.on(PLAYER_EVENTS.joinRoom, async (playerName: string, room: IMinifiedRoom) => {
+      console.log(PLAYER_EVENTS.joinRoom);
+      // const identity: IMinifiedIdentity | null = await RoomHandler.createRoom(socket, playerName, roomName);
     });
 
     socket.on(PLAYER_EVENTS.deleteRoom, () => {
@@ -36,10 +42,6 @@ export class WebsocketCommunication {
 
     socket.on(PLAYER_EVENTS.joinGame, () => {
       console.log(PLAYER_EVENTS.joinGame);
-    });
-
-    socket.on(PLAYER_EVENTS.joinRoom, () => {
-      console.log(PLAYER_EVENTS.joinRoom);
     });
 
     socket.on(PLAYER_EVENTS.leaveGame, () => {

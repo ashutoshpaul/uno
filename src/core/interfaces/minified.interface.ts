@@ -7,10 +7,11 @@
  * REDIS Schema: { { socket.id (key): IConnection (value) }, ...}
  */
 
-interface IMinifiedRoom {
+export interface IMinifiedRoom {
   id: string;
   name: string;
   createdBy?: IMinifiedPlayer;
+  isVacancy: boolean;
 }
 
 export interface IMinifiedPlayer {

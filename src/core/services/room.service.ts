@@ -31,6 +31,7 @@ export class RoomService {
         players: [player],
         lastDrawnCard: null,
       },
+      isVacancy: true,
     }
 
     return room;

@@ -23,7 +23,8 @@ export class RoomHandler {
           createdBy: {
             id: room.game.players[0].id,
             name: room.game.players[0].name,
-          }
+          },
+          isVacancy: true,
         },
       };
 
