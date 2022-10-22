@@ -12,15 +12,9 @@ const server = app.listen(3000, () => {
   console.log('Started in 3000');
 });
 
+const redisClient = redisSetup.setup();
 
-// REDIS
-let redisClient = redisSetup.setup();
-// console.log('redisClient', redisClient);
-
-
-// SOCKET
 const io = websocketSetup.setup(server);
-// console.log('io', io);
 
 
 let count: number = 0;
