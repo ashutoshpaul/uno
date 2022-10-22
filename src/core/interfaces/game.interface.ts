@@ -8,4 +8,6 @@ export interface IGame {
     discardPileCards: ICard[];
     chats: IChat[];
     isGameStarted: boolean;
+
+    lastDrawnCard: ICard | null;
 }

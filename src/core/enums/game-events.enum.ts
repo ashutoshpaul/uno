@@ -12,7 +12,7 @@ export const enum GAME_EVENTS {
   changeDirection = 'changeDirection',
   skipped = 'skipped',
   
-  // automatic events
+  // auto-triggered events
   shuffle = 'shuffle',
   discardFirstCard = 'discardFirstCard',
   distributeCards = 'distributeCards',

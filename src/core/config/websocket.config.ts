@@ -1,29 +1,26 @@
-import { GAME_EVENTS, PLAYER_EVENTS } from "../enums/player-events.enum";
+import { RoomController } from "../controllers/room.contoller";
+import { GAME_EVENTS } from "../enums/game-events.enum";
+import { PLAYER_EVENTS } from "../enums/player-events.enum";
+import { RESPONSE_EVENTS } from "../enums/response-events.enum";
+import { IMinifiedIdentity } from "../interfaces/minified.interface";
 
 export class WebsocketConfig {
   static count = 0;
 
   static registerEvents(socket: any): void {
-
-    // socket.on('increment', () => {
-    //   this.count = WebSocketService.increment(this.count);
-    //   console.log('--------- INC', this.count);
-    //   socket.emit('increment', this.count);
-    // });
-
-    // socket.on('decrement', () => {
-    //   this.count = WebSocketService.decrement(this.count);
-    //   console.log('--------- DEC', this.count);
-    //   socket.emit('decrement', this.count);
-    // });
-
     // Player Events
     socket.on(PLAYER_EVENTS.allJoinedGame, () => {
       console.log(PLAYER_EVENTS.allJoinedGame);
     });
 
-    socket.on(PLAYER_EVENTS.createRoom, () => {
+    socket.on(PLAYER_EVENTS.createRoom, (playerName: string, roomName: string) => {
       console.log(PLAYER_EVENTS.createRoom);
+      const identity: IMinifiedIdentity | null = RoomController.createRoom(socket, playerName, roomName);
+      if (identity) {
+        socket.emit(RESPONSE_EVENTS.roomCreated, identity);
+      } else {
+        socket.emit(RESPONSE_EVENTS.failed, null);
+      }
     });
 
     socket.on(PLAYER_EVENTS.deleteRoom, () => {
@@ -134,6 +131,19 @@ export class WebsocketConfig {
 
     socket.on(GAME_EVENTS.skipped, () => {
       console.log(GAME_EVENTS.skipped);
+    });
+
+    // Response Events
+    socket.on(RESPONSE_EVENTS.failed, () => {
+      console.log(RESPONSE_EVENTS.failed);
+    });
+
+    socket.on(RESPONSE_EVENTS.roomJoined, () => {
+      console.log(RESPONSE_EVENTS.roomJoined);
+    });
+
+    socket.on(RESPONSE_EVENTS.roomLeft, () => {
+      console.log(RESPONSE_EVENTS.roomLeft);
     });
 
     socket.on('disconnect', () => {

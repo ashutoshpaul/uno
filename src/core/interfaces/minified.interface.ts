@@ -7,13 +7,17 @@
  * REDIS Schema: { { socket.id (key): IConnection (value) }, ...}
  */
 
-export interface IConnection {
-  player: {
-    playerId: string;
-    playerName: string;
-  }
-  room: {
-    roomId: string;
-    roomName: string;
-  }
+interface IMinifiedRoom {
+  id: string;
+  name: string;
+}
+
+interface IMinifiedPlayer {
+  id: string;
+  name: string;
+}
+
+export interface IMinifiedIdentity {
+  player: IMinifiedPlayer;
+  room: IMinifiedRoom;
 }
