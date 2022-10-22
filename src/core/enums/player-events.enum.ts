@@ -1,25 +1,29 @@
 // all actions performed by the player
 export const enum PLAYER_EVENTS {
-    play = 'play',
-    wait = 'wait', // wait for his/her turn to play
+  play = 'play',
+  wait = 'wait', // wait for his/her turn to play
 
-    createRoom = 'createRoom',
-    joinRoom = 'joinRoom',
-    leaveRoom = 'leaveRoom',
-    deleteRoom = 'deleteRoom',
+  createRoom = 'createRoom',
+  joinRoom = 'joinRoom',
+  leaveRoom = 'leaveRoom',
+  deleteRoom = 'deleteRoom',
 
-    waitingForPlayersToJoinGame = 'waitingForPlayersToJoinGame', // waiting for other players to join
-    allJoinedGame = 'allJoinedGame', // all players joined
-    leaveGame = 'leaveGame', // leave the game
+  startGame = 'startGame', // player started game
+  joinGame = 'joinGame', // player started game
+  waitingForPlayersToJoinGame = 'waitingForPlayersToJoinGame',
+  allJoinedGame = 'allJoinedGame',
+  leaveGame = 'leaveGame',
 
-    offline = 'offline', // opponent went offline
-    online = 'online', // opponent came back online
-    removePlayer = 'removePlayer',
+  playerWentOffline = 'playerWentOffline',
+  playerCameBackOnline = 'playerCameBackOnline',
+  removePlayer = 'removePlayer',
 
-    drawCard = 'drawCard',
-    discard = 'discard', // throw card
-    skipChance = 'skipChance', // when you already picked a card and don't want to discard
-    uno = 'uno', // player shouts UNO
+  drawCard = 'drawCard',
+  discard = 'discard', // throw card
+  skipChance = 'skipChance', // when you already picked a card and don't want to discard
+  uno = 'uno', // player shouts UNO
+
+  message = 'message' // player sent message in chat
 }
 
 /**
@@ -27,17 +31,18 @@ export const enum PLAYER_EVENTS {
  * triggered by the cards
  */
 export const enum GAME_EVENTS {
-    drawTwoCards = 'drawTwoCards',
-    drawFourCards = 'drawFourCards',
+  drawTwoCards = 'drawTwoCards',
+  drawFourCards = 'drawFourCards',
 
-    changeColor = 'changeColor', // choosing a color
-    colorChanged = 'colorChanged',  // color chosen
+  changeColor = 'changeColor', // choosing a color
+  colorChanged = 'colorChanged',  // color chosen
 
-    changeDirection = 'changeDirection',
-    skipped = 'skipped',
+  changeDirection = 'changeDirection',
+  skipped = 'skipped',
 
-    // automatic events
-    shuffle = 'shuffle',
-    discardFirstCard = 'discardFirstCard',
-    distributeCards = 'distributeCards',
+  // automatic events
+  shuffle = 'shuffle',
+  discardFirstCard = 'discardFirstCard',
+  distributeCards = 'distributeCards',
+  noCardsLeft = 'noCardsLeft',
 }
