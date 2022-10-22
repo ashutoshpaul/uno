@@ -4,6 +4,7 @@ export const enum RESPONSE_EVENTS {
   roomJoined = 'roomJoined',
   roomLeft = 'roomLeft',
   roomDeleted = 'roomDeleted',
+  connectionEstablished = 'connectionEstablished',
 
   // startGame = 'startGame', // player started game
   // joinGame = 'joinGame', // player started game

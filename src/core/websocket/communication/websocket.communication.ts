@@ -1,11 +1,10 @@
-import { RoomController } from "../controllers/room.contoller";
-import { GAME_EVENTS } from "../enums/game-events.enum";
-import { PLAYER_EVENTS } from "../enums/player-events.enum";
-import { RESPONSE_EVENTS } from "../enums/response-events.enum";
-import { IMinifiedIdentity } from "../interfaces/minified.interface";
+import { GAME_EVENTS } from "src/core/enums/game-events.enum";
+import { PLAYER_EVENTS } from "src/core/enums/player-events.enum";
+import { RESPONSE_EVENTS } from "src/core/enums/response-events.enum";
+import { IMinifiedIdentity } from "src/core/interfaces/minified.interface";
+import { RoomHandler } from "../handlers/room.handler";
 
-export class WebsocketConfig {
-  static count = 0;
+export class WebsocketCommunication {
 
   static registerEvents(socket: any): void {
     // Player Events
@@ -13,9 +12,9 @@ export class WebsocketConfig {
       console.log(PLAYER_EVENTS.allJoinedGame);
     });
 
-    socket.on(PLAYER_EVENTS.createRoom, (playerName: string, roomName: string) => {
+    socket.on(PLAYER_EVENTS.createRoom, async (playerName: string, roomName: string) => {
       console.log(PLAYER_EVENTS.createRoom);
-      const identity: IMinifiedIdentity | null = RoomController.createRoom(socket, playerName, roomName);
+      const identity: IMinifiedIdentity | null = await RoomHandler.createRoom(socket, playerName, roomName);
       if (identity) {
         socket.emit(RESPONSE_EVENTS.roomCreated, identity);
       } else {

@@ -6,7 +6,7 @@ function setup(server: any): any {
       cors: { origin: '*' }
     });
     return io;
-  } catch(e) {
+  } catch(err) {
     throw new Error('Socket not connected!');
   }
 }
