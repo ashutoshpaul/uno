@@ -1,5 +1,6 @@
 const express = require('express');
 import * as dotenv from 'dotenv';
+import { WebsocketConfig } from './core/config/websocket.config';
 import * as redisSetup from './redis.setup';
 import * as websocketSetup from './websocket.setup';
 
@@ -22,17 +23,5 @@ let count: number = 0;
 io.sockets.on('connection', (socket: any) => {
   console.log('connected', socket.id);
 
-  socket.on('increment', () => {
-    count++; console.log('--------- INC', count);
-    io.emit('increment-count', count);
-  });
-
-  socket.on('decrement', () => {
-    count--; console.log('--------- DEC', count);
-    io.emit('decrement-count', count);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('server disconnected');
-  });
+  WebsocketConfig.registerEvents(socket);
 });
