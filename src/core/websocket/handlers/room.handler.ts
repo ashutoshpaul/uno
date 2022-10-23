@@ -28,10 +28,10 @@ export class RoomHandler {
   static async joinRoom(socket: Socket, playerName: string, minifiedRoom: IMinifiedRoom): Promise<IMinifiedIdentity | null> {
     try {
       let fetchRoom: IRoom = JSON.parse(await redis.hget("rooms", minifiedRoom.id));
-      if(fetchRoom) {
+      if(fetchRoom && fetchRoom.isAvailable) {
         const { player, room } = RoomService.updateRoom(playerName, fetchRoom);
         const identity: IMinifiedIdentity = RoomHandler.createIdentity(player, room);
-        
+
         await redis.hset("identities", socket.id, JSON.stringify(identity));
         await redis.hset("rooms", room.id, JSON.stringify(room)); // update
 
@@ -58,4 +58,5 @@ export class RoomHandler {
       },
     };
   }
+
 }
