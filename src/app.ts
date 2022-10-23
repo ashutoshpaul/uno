@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import * as redisSetup from './redis.setup';
 import * as websocketSetup from './websocket.setup';
 import * as routeSetup from './route.setup';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { RESPONSE_EVENTS } from './core/enums/response-events.enum';
 import { WebsocketCommunication } from './core/websocket/communication/websocket.communication';
 
@@ -21,7 +21,7 @@ const server = app.listen(3000, () => {
 
 const redisClient = redisSetup.setup();
 
-const socketIO = websocketSetup.setup(server);
+const socketIO: Server = websocketSetup.setup(server);
 
 routeSetup.setup(app);
 

@@ -6,7 +6,10 @@ export class MainRoute {
 
   public register(app: express.Application): void {
     app.route("/identity").post(PlayerController.updateSocketId);
+
     app.route("/rooms").get(RoomController.getRooms);
+    app.route("/rooms").post(RoomController.createRoom);
+    app.route("/join-room").post(RoomController.joinRoom);
   }
 
 }

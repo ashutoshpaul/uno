@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import { GAME_EVENTS } from "src/core/enums/game-events.enum";
 import { PLAYER_EVENTS } from "src/core/enums/player-events.enum";
 import { RESPONSE_EVENTS } from "src/core/enums/response-events.enum";
@@ -6,32 +7,12 @@ import { RoomHandler } from "../handlers/room.handler";
 
 export class WebsocketCommunication {
 
-  static registerEvents(socket: any): void {
+  static registerEvents(socket: Socket): void {
     // Player Events
     socket.on(PLAYER_EVENTS.allJoinedGame, () => {
       console.log(PLAYER_EVENTS.allJoinedGame);
     });
 
-    // Room Events
-    socket.on(PLAYER_EVENTS.createRoom, async (playerName: string, roomName: string) => {
-      console.log(PLAYER_EVENTS.createRoom);
-      const identity: IMinifiedIdentity | null = await RoomHandler.createRoom(socket, playerName, roomName);
-      if (identity) {
-        socket.emit(RESPONSE_EVENTS.roomCreated, identity);
-      } else {
-        socket.emit(RESPONSE_EVENTS.failed, null);
-      }
-    });
-
-    socket.on(PLAYER_EVENTS.joinRoom, async (playerName: string, room: IMinifiedRoom) => {
-      console.log(PLAYER_EVENTS.joinRoom);
-      const identity: IMinifiedIdentity | null = await RoomHandler.joinRoom(socket, playerName, room);
-      if (identity) {
-        socket.emit(RESPONSE_EVENTS.roomJoined, identity);
-      } else {
-        socket.emit(RESPONSE_EVENTS.failed, null);
-      }
-    });
 
     socket.on(PLAYER_EVENTS.deleteRoom, () => {
       console.log(PLAYER_EVENTS.deleteRoom);
