@@ -25,7 +25,12 @@ export class WebsocketCommunication {
 
     socket.on(PLAYER_EVENTS.joinRoom, async (playerName: string, room: IMinifiedRoom) => {
       console.log(PLAYER_EVENTS.joinRoom);
-      // const identity: IMinifiedIdentity | null = await RoomHandler.createRoom(socket, playerName, roomName);
+      const identity: IMinifiedIdentity | null = await RoomHandler.joinRoom(socket, playerName, room);
+      if (identity) {
+        socket.emit(RESPONSE_EVENTS.roomJoined, identity);
+      } else {
+        socket.emit(RESPONSE_EVENTS.failed, null);
+      }
     });
 
     socket.on(PLAYER_EVENTS.deleteRoom, () => {
