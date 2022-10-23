@@ -25,7 +25,7 @@ export class RoomService {
         players: [player],
         lastDrawnCard: null,
       },
-      isVacancy: true,
+      isAvailable: true,
     }
 
     return { player, room };
@@ -38,7 +38,7 @@ export class RoomService {
       room.game?.players && Array.isArray(room.game.players) && room.game.players.length
     ) {
       room.game.players.push(player);
-      if (room.game.players.length == 4) room.isVacancy = false;
+      if (room.game.players.length == 4) room.isAvailable = false;
     }
     return { player, room };
   }

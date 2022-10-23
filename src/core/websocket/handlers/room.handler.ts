@@ -54,7 +54,7 @@ export class RoomHandler {
         id: room.id,
         name: room.name,
         createdBy: room.createdBy,
-        isVacancy: room.isVacancy,
+        isAvailable: room.isAvailable,
       },
     };
   }

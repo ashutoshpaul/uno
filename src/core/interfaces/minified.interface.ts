@@ -11,7 +11,7 @@ export interface IMinifiedRoom {
   id: string;
   name: string;
   createdBy?: IMinifiedPlayer;
-  isVacancy: boolean;
+  isAvailable: boolean;
 }
 
 export interface IMinifiedPlayer {

@@ -6,5 +6,5 @@ export interface IRoom {
   name: string;
   game: IGame;
   createdBy: IMinifiedPlayer;
-  isVacancy: boolean;
+  isAvailable: boolean;
 }
