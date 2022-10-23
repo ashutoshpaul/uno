@@ -1,4 +1,4 @@
-import { IMinifiedIdentity, IMinifiedRoom } from "./minified.interface";
+import { IMinifiedIdentity, IMinifiedPlayer, IMinifiedRoom } from "./minified.interface";
 
 export interface IUpdateSocketIdPayload {
   socketId: string;
@@ -13,4 +13,13 @@ export interface ICreateRoomPayload {
 export interface IJoinRoomPayload {
   playerName: string;
   room: IMinifiedRoom;
+}
+
+export interface ILobbyRoomResponse {
+  createdBy: IMinifiedPlayer;
+  isGameStarted: boolean;
+  status?: any; // MANDATORY is front-end
+  players: IMinifiedPlayer[],
+  name: string;
+  id: string;
 }

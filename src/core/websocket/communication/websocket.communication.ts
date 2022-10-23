@@ -7,7 +7,7 @@ import { RoomHandler } from "../handlers/room.handler";
 
 export class WebsocketCommunication {
 
-  static registerEvents(socket: Socket): void {
+  public static registerEvents(socket: Socket): void {
     // Player Events
     socket.on(PLAYER_EVENTS.allJoinedGame, () => {
       console.log(PLAYER_EVENTS.allJoinedGame);
@@ -136,5 +136,18 @@ export class WebsocketCommunication {
     socket.on('disconnect', () => {
       console.log('socket disconnected', socket.id);
     });
+  }
+
+  public static emit(
+    socket: Socket,
+    roomId: string,
+    event: PLAYER_EVENTS | GAME_EVENTS | RESPONSE_EVENTS, 
+    data: any
+  ): void {
+    switch(event) {
+      case RESPONSE_EVENTS.roomJoined:
+        socket.to(roomId).emit(event, data);
+        break;
+    }
   }
 }
