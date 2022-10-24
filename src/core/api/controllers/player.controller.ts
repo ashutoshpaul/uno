@@ -35,7 +35,7 @@ export class PlayerController {
 
     if (list.length > 0) {
       const mappedList: {key: string, value: IMinifiedIdentity}[] = list;
-  
+
       let identity: IMinifiedIdentity | undefined;
       let key: string | undefined;
       mappedList.filter((e) => {
@@ -47,7 +47,7 @@ export class PlayerController {
           return e;
         }
       });
-  
+
       if(identity && key) {
         redis.hdel('identities', key);
         redis.hset('identities', data.socketId, JSON.stringify(identity));

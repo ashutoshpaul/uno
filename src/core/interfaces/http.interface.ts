@@ -15,6 +15,11 @@ export interface IJoinRoomPayload {
   room: IMinifiedRoom;
 }
 
+export interface IJoinRoomResponse {
+  identity: IMinifiedIdentity;
+  room: ILobbyRoomResponse;
+}
+
 export interface ILobbyRoomResponse {
   createdBy: IMinifiedPlayer;
   isGameStarted: boolean;

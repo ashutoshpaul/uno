@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Socket } from "socket.io";
 import { socketIO } from "./../../../app";
-import { ICreateRoomPayload, IJoinRoomPayload, ILobbyRoomResponse } from "src/core/interfaces/http.interface";
+import { ICreateRoomPayload, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse } from "src/core/interfaces/http.interface";
 import { IMinifiedIdentity, IMinifiedPlayer } from "src/core/interfaces/minified.interface";
 import { IRoom } from "src/core/interfaces/room.interface";
 import { RoomService } from "./../../services/room.service";
@@ -90,7 +90,18 @@ export class RoomController {
 
             RoomService.joinSocketToRoom(clientSocket, room.id);
             WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomJoined, room);
-            return res.json(identity);
+            
+            const response: IJoinRoomResponse = {
+              identity: identity,
+              room: {
+                createdBy: room.createdBy,
+                id: room.id,
+                isGameStarted: room.game.isGameStarted,
+                name: room.name,
+                players: room.game.players,
+              }
+            };
+            return res.json(response);
           }
           throw new Error("socket is missing");
         } else {
