@@ -88,9 +88,6 @@ export class RoomController {
             await redis.hset("identities", clientSocket.id, JSON.stringify(identity));
             await redis.hset("rooms", room.id, JSON.stringify(room)); // update
 
-            RoomService.joinSocketToRoom(clientSocket, room.id);
-            WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomJoined, room);
-            
             const response: IJoinRoomResponse = {
               identity: identity,
               room: {
@@ -101,6 +98,10 @@ export class RoomController {
                 players: room.game.players,
               }
             };
+
+            RoomService.joinSocketToRoom(clientSocket, room.id);
+            WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomJoined, response.room);
+            
             return res.json(response);
           }
           throw new Error("socket is missing");

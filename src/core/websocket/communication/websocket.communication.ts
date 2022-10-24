@@ -138,6 +138,13 @@ export class WebsocketCommunication {
     });
   }
 
+  /**
+   * 
+   * @param socket client emitting the event
+   * @param roomId client's room
+   * @param event event type
+   * @param data data to be sent to other clients present in the room
+   */
   public static emit(
     socket: Socket,
     roomId: string,
