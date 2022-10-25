@@ -157,6 +157,9 @@ export class WebsocketCommunication {
         break;
       case RESPONSE_EVENTS.roomDeleted:
         socket.to(roomId).emit(event);
+        break;
+      case RESPONSE_EVENTS.roomLeft:
+        socket.to(roomId).emit(event, data);
     }
   }
 }

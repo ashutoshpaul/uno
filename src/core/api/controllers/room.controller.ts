@@ -138,7 +138,7 @@ export class RoomController {
           const createdBy: IMinifiedPlayer = room.createdBy;
 
           const playerInitiatedDeletion: IMinifiedIdentity = 
-          JSON.parse(await redis.hget('identities', socketId));
+            JSON.parse(await redis.hget('identities', socketId));
 
           if (playerInitiatedDeletion && 
             playerInitiatedDeletion.player.id == createdBy.id) {
@@ -174,6 +174,60 @@ export class RoomController {
           } else { throw new Error('player is not host'); }
         } else {
           throw new Error("room not found");
+        }
+      } else {
+        throw new Error("roomId and socketId required.");
+      }
+    } catch (err) { throw new Error(err+""); }
+  }
+
+  /**
+   * Player leaves room (host cannot leave room. Host can delete the room.)
+   * 1. Check whether client is host or not. If client is not host then Step 2.
+   * 2. Remove player from players-list of his/her room (REDIS 'rooms').
+   * 3. Remove player's identity from REDIS database 'identities'.
+   * 4. Broadcast 'room-left' event to affected room players.
+   */
+  static async leaveRoom(req: Request, res: Response) {
+    const roomId: string = req.params.id;
+    const socketId: string = req.headers['socket-id']+"";
+    try {
+      if (roomId && socketId) {
+        const room: IRoom = JSON.parse(await redis.hget('rooms', roomId));
+        
+        if (room) {
+          const createdBy: IMinifiedPlayer = room.createdBy;
+
+          const playerLeavingRoom: IMinifiedIdentity = 
+            JSON.parse(await redis.hget('identities', socketId));
+
+          if (playerLeavingRoom && 
+            playerLeavingRoom.player.id != createdBy.id) {
+
+              const filteredPlayers: IPlayer[] = 
+                room.game.players.filter(e => e.id != playerLeavingRoom.player.id);
+
+              room.game.players = filteredPlayers;
+
+              await redis.hset("rooms", room.id, JSON.stringify(room)); // update
+              await redis.hdel('identities', socketId);
+              
+              const clientSocket = socketIO.sockets.sockets.get(socketId);
+              if(clientSocket) {
+                const typedRoom: ILobbyRoomResponse = {
+                  createdBy: room.createdBy,
+                  id: room.id,
+                  isGameStarted: room.game.isGameStarted,
+                  players: room.game.players.map(player => <IMinifiedPlayer>{
+                    id: player.id,
+                    name: player.name,
+                  }),
+                  name: room.name,
+                }
+                WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomLeft, typedRoom);
+                res.json({});
+              }
+          } else { throw new Error('player is host'); }
         }
       } else {
         throw new Error("roomId and socketId required.");
