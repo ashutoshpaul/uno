@@ -28,3 +28,8 @@ export interface ILobbyRoomResponse {
   name: string;
   id: string;
 }
+
+export interface IPlayerLeftRoomResponse {
+  playerName: string;
+  room: ILobbyRoomResponse;
+}

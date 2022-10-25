@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Socket } from "socket.io";
 import { socketIO } from "./../../../app";
-import { ICreateRoomPayload, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse } from "src/core/interfaces/http.interface";
+import { ICreateRoomPayload, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse, IPlayerLeftRoomResponse } from "src/core/interfaces/response.interface";
 import { IMinifiedIdentity, IMinifiedPlayer } from "src/core/interfaces/minified.interface";
 import { IRoom } from "src/core/interfaces/room.interface";
 import { RoomService } from "./../../services/room.service";
@@ -214,18 +214,22 @@ export class RoomController {
               
               const clientSocket = socketIO.sockets.sockets.get(socketId);
               if(clientSocket) {
-                const typedRoom: ILobbyRoomResponse = {
-                  createdBy: room.createdBy,
-                  id: room.id,
-                  isGameStarted: room.game.isGameStarted,
-                  players: room.game.players.map(player => <IMinifiedPlayer>{
-                    id: player.id,
-                    name: player.name,
-                  }),
-                  name: room.name,
-                }
+                const response: IPlayerLeftRoomResponse = {
+                  playerName: playerLeavingRoom.player.name,
+                  room: {
+                    createdBy: room.createdBy,
+                    id: room.id,
+                    isGameStarted: room.game.isGameStarted,
+                    players: room.game.players.map(player => <IMinifiedPlayer>{
+                      id: player.id,
+                      name: player.name,
+                    }),
+                    name: room.name,
+                  }
+                };
                 console.log('room left');
-                WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomLeft, typedRoom);
+                WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomLeft, response);
+
                 res.json({});
               }
           } else { throw new Error('player is host'); }

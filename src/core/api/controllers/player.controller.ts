@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Socket } from "socket.io";
 import { RoomService } from "./../../services/room.service";
 import { socketIO } from "./../../../app";
-import { IUpdateSocketIdPayload } from "./../../interfaces/http.interface";
+import { IUpdateSocketIdPayload } from "../../interfaces/response.interface";
 import { IMinifiedIdentity } from "./../../interfaces/minified.interface";
 const Redis = require("ioredis");
 
