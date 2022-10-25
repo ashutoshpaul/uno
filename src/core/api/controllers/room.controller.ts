@@ -224,6 +224,7 @@ export class RoomController {
                   }),
                   name: room.name,
                 }
+                console.log('room left');
                 WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomLeft, typedRoom);
                 res.json({});
               }
