@@ -49,8 +49,8 @@ export class PlayerController {
       });
 
       if(identity && key) {
-        redis.hdel('identities', key);
-        redis.hset('identities', data.socketId, JSON.stringify(identity));
+        await redis.hdel('identities', key);
+        await redis.hset('identities', data.socketId, JSON.stringify(identity));
       }
 
       const clientSocket = socketIO.sockets.sockets.get(data.socketId);

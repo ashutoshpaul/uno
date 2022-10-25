@@ -11,6 +11,7 @@ export class MainRoute {
     app.route("/rooms").get(RoomController.getRooms);
     app.route("/rooms").post(RoomController.createRoom);
     app.route("/join-room").post(RoomController.joinRoom);
+    app.route("/rooms/:id").delete(RoomController.deleteRoom);
   }
 
 }

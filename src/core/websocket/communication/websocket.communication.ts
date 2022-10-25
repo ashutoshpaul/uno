@@ -155,6 +155,8 @@ export class WebsocketCommunication {
       case RESPONSE_EVENTS.roomJoined:
         socket.to(roomId).emit(event, data);
         break;
+      case RESPONSE_EVENTS.roomDeleted:
+        socket.to(roomId).emit(event);
     }
   }
 }

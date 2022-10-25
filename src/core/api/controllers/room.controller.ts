@@ -8,6 +8,7 @@ import { RoomService } from "./../../services/room.service";
 import { PlayerService } from "./../../services/player.service";
 import { WebsocketCommunication } from "./../../websocket/communication/websocket.communication";
 import { RESPONSE_EVENTS } from "./../../enums/response-events.enum";
+import { IPlayer } from "src/core/interfaces/player.interface";
 
 const Redis = require("ioredis");
 
@@ -115,6 +116,69 @@ export class RoomController {
       console.error('joinRoom', err);
     }
     return res.json(null);
+  }
+
+  /**
+   * Delete a room (only host is allowed to delete his/her created room).
+   * 1. Check whether client is host or not. If host then Step 2.
+   * 2. Delete room from the REDIS database (rooms)
+   * 3. Fetch all players from the REDIS database (identities)
+   * 4. Delete all players connected to the room in 'identities' (delete keys via socketId)
+   * 5. Broadcast 'room-deleted' event to affected room players
+   * 6. In front-end, delete identity of affected room players
+   */
+  static async deleteRoom(req: Request, res: Response) {
+    const roomId: string = req.params.id;
+    const socketId: string = req.headers['socket-id']+"";
+    try {
+      if (roomId && socketId) {
+        const room: IRoom = JSON.parse(await redis.hget('rooms', roomId));
+        
+        if (room) {
+          const createdBy: IMinifiedPlayer = room.createdBy;
+
+          const playerInitiatedDeletion: IMinifiedIdentity = 
+          JSON.parse(await redis.hget('identities', socketId));
+
+          if (playerInitiatedDeletion && 
+            playerInitiatedDeletion.player.id == createdBy.id) {
+
+            const players: IPlayer[] = room.game.players;
+            const playerIds: string[] = players.map(e => e.id);
+
+            await redis.hdel('rooms', roomId);
+
+            const rawData: any = await redis.hgetall('identities');
+            const list: Array<any> = [];
+            for(let key in rawData) { 
+              if(rawData.hasOwnProperty(key)) { 
+                list.push({ key: key, value: JSON.parse(rawData[key]) }); 
+              }
+            }
+            const mappedPlayers: {key: string, value: IMinifiedIdentity}[] = list;
+
+            const playersToBeDeleted: {key: string, value: IMinifiedIdentity}[] = 
+              mappedPlayers.filter((e) => playerIds.includes(e.value.player.id));
+
+            const socketIds: string[] = playersToBeDeleted.map(e => e.key);
+            console.log(playersToBeDeleted, socketIds);
+
+            await redis.hdel('identities', socketIds);
+            console.log("socket-ids deleted");
+
+            const clientSocket = socketIO.sockets.sockets.get(socketId);
+            if(clientSocket) {
+              WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomDeleted, null);
+              res.json({});
+            }
+          } else { throw new Error('player is not host'); }
+        } else {
+          throw new Error("room not found");
+        }
+      } else {
+        throw new Error("roomId and socketId required.");
+      }
+    } catch (err) { throw new Error(err+""); }
   }
 
 }
