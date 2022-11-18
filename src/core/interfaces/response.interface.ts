@@ -15,6 +15,11 @@ export interface IJoinRoomPayload {
   room: IMinifiedRoom;
 }
 
+export interface IPlayerRemovePayload {
+  actionPlayer: IMinifiedPlayer;
+  playerToBeRemoved: IMinifiedPlayer;
+}
+
 export interface IJoinRoomResponse {
   identity: IMinifiedIdentity;
   room: ILobbyRoomResponse;
@@ -31,5 +36,11 @@ export interface ILobbyRoomResponse {
 
 export interface IPlayerLeftRoomResponse {
   playerName: string;
+  room: ILobbyRoomResponse;
+}
+
+export interface IPlayerRemovedResponse {
+  actionPlayer: string;
+  playerRemoved: IMinifiedPlayer;
   room: ILobbyRoomResponse;
 }

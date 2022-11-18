@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Socket } from "socket.io";
 import { socketIO } from "./../../../app";
-import { ICreateRoomPayload, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse, IPlayerLeftRoomResponse } from "src/core/interfaces/response.interface";
+import { ICreateRoomPayload, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse, IPlayerLeftRoomResponse, IPlayerRemovedResponse, IPlayerRemovePayload } from "src/core/interfaces/response.interface";
 import { IMinifiedIdentity, IMinifiedPlayer } from "src/core/interfaces/minified.interface";
 import { IRoom } from "src/core/interfaces/room.interface";
 import { RoomService } from "./../../services/room.service";
@@ -30,7 +30,7 @@ export class RoomController {
             name: player.name,
           }),
           name: room.name,
-        }
+        };
         res.json(response);
       } else { throw new Error("Room not found"); }
     } catch (err) { console.log(err); }
@@ -182,11 +182,13 @@ export class RoomController {
   }
 
   /**
-   * Player leaves room (host cannot leave room. Host can delete the room.)
+   * Player leaves room (host cannot leave room. Host can delete the room).
    * 1. Check whether client is host or not. If client is not host then Step 2.
    * 2. Remove player from players-list of his/her room (REDIS 'rooms').
-   * 3. Remove player's identity from REDIS database 'identities'.
-   * 4. Broadcast 'room-left' event to affected room players.
+   * 3. Update room's availability status.
+   * 4. Remove player's identity from REDIS database 'identities'.
+   * 5. Broadcast 'room-left' event to affected room players.
+   * 6. Remove socket from the room.
    */
   static async leaveRoom(req: Request, res: Response) {
     const roomId: string = req.params.id;
@@ -208,6 +210,7 @@ export class RoomController {
                 room.game.players.filter(e => e.id != playerLeavingRoom.player.id);
 
               room.game.players = filteredPlayers;
+              RoomService.updateRoomAvailability(room);
 
               await redis.hset("rooms", room.id, JSON.stringify(room)); // update
               await redis.hdel('identities', socketId);
@@ -229,6 +232,7 @@ export class RoomController {
                 };
                 console.log('room left');
                 WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomLeft, response);
+                RoomService.removeSocketFromRoom(clientSocket, room.id);
 
                 res.json({});
               }
@@ -238,6 +242,81 @@ export class RoomController {
         throw new Error("roomId and socketId required.");
       }
     } catch (err) { throw new Error(err+""); }
+  }
+
+  /**
+   * Player is removed (host cannot be removed).
+   * 1. Check whether player to be removed is host or not. If not then Step 2.
+   * 2. Remove player from players-list of his/her room (REDIS 'rooms').
+   * 3. Update room's availability status.
+   * 4. Remove player's identity from REDIS database 'identities'.
+   * 5. Broadcast 'player-removed' event to affected room players.
+   * 6. Remove removed-player's socket from the room.
+   * 7. In front-end, delete identity of removed-player
+   */
+  static async removePlayer(req: Request, res: Response) {
+    const roomId: string = req.params.id;
+    const socketId: string = req.headers['socket-id']+"";
+    try {
+      const data: IPlayerRemovePayload = req.body;
+      if (data && socketId && roomId) {
+        const room: IRoom = JSON.parse(await redis.hget('rooms', roomId));
+
+        if (room) {
+          const createdBy: IMinifiedPlayer = room.createdBy;
+
+          const playerToBeDeleted: IPlayer | undefined = room.game.players.find(e => e.id == data.playerToBeRemoved.id);
+
+          if (playerToBeDeleted && 
+            playerToBeDeleted.id != createdBy.id) {
+
+            const filteredPlayers: IPlayer[] = 
+              room.game.players.filter(e => e.id != playerToBeDeleted.id);
+
+            room.game.players = filteredPlayers;
+            RoomService.updateRoomAvailability(room);
+
+            await redis.hset("rooms", room.id, JSON.stringify(room)); // update
+            
+            const clientSocket = socketIO.sockets.sockets.get(socketId);
+            
+            const playerDeletedSocketId = await RoomService.getSocketId(playerToBeDeleted.id);
+            const playerDeletedSocket = playerDeletedSocketId && socketIO.sockets.sockets.get(playerDeletedSocketId);
+            
+            if(clientSocket && playerDeletedSocket) {
+              await redis.hdel('identities', playerDeletedSocketId);
+              
+              const lobbyRoom: ILobbyRoomResponse = {
+                createdBy: room.createdBy,
+                id: room.id,
+                isGameStarted: room.game.isGameStarted,
+                players: room.game.players.map(player => <IMinifiedPlayer>{
+                  id: player.id,
+                  name: player.name,
+                }),
+                name: room.name,
+              };
+              const response: IPlayerRemovedResponse = {
+                actionPlayer: data.actionPlayer.name,
+                playerRemoved: { id: playerToBeDeleted.id, name: playerToBeDeleted.name },
+                room: lobbyRoom,
+              };
+              console.log('player removed');
+              WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.playerRemoved, response);
+              RoomService.removeSocketFromRoom(playerDeletedSocket, room.id);
+
+              res.json(lobbyRoom);
+            } else { throw new Error('clientSocket and playerDeletedSocket should exist'); }
+          } else { 
+            throw new Error('player-to-be-removed is host'); 
+          }
+        }
+      } else {
+        throw new Error("roomId, socketId and player-to-be-removed-identity required.");
+      }
+    } catch (err) {
+      console.log(err);
+      throw new Error(err+""); }
   }
 
 }

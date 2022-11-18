@@ -2,8 +2,6 @@ import { Socket } from "socket.io";
 import { GAME_EVENTS } from "src/core/enums/game-events.enum";
 import { PLAYER_EVENTS } from "src/core/enums/player-events.enum";
 import { RESPONSE_EVENTS } from "src/core/enums/response-events.enum";
-import { IMinifiedIdentity, IMinifiedRoom } from "src/core/interfaces/minified.interface";
-import { RoomHandler } from "../handlers/room.handler";
 
 export class WebsocketCommunication {
 
@@ -160,6 +158,10 @@ export class WebsocketCommunication {
         break;
       case RESPONSE_EVENTS.roomLeft:
         socket.to(roomId).emit(event, data);
+        break;
+      case RESPONSE_EVENTS.playerRemoved:
+        socket.to(roomId).emit(event, data);
+        break;
     }
   }
 }
