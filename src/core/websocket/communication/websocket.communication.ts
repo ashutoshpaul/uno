@@ -150,20 +150,16 @@ export class WebsocketCommunication {
     data: any
   ): void {
     switch(event) {
-      case RESPONSE_EVENTS.roomJoined:
-        socket.to(roomId).emit(event, data);
-        break;
       case RESPONSE_EVENTS.roomDeleted:
         socket.to(roomId).emit(event);
         break;
-      case RESPONSE_EVENTS.roomLeft:
-        socket.to(roomId).emit(event, data);
-        break;
+      case RESPONSE_EVENTS.roomJoined:
       case RESPONSE_EVENTS.playerRemoved:
+      case RESPONSE_EVENTS.roomLeft:
+      case RESPONSE_EVENTS.gameStarted:
+      case RESPONSE_EVENTS.gameJoined:
         socket.to(roomId).emit(event, data);
         break;
-      case RESPONSE_EVENTS.gameStarted:
-        socket.to(roomId).emit(event, data);
     }
   }
 }

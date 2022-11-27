@@ -17,6 +17,7 @@ export class MainRoute {
     app.route("/room/remove/:id").post(RoomController.removePlayer);
 
     app.route("/game/start").post(GameController.startGame);
+    app.route("/game/join").post(GameController.joinGame);
   }
 
 }
