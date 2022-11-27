@@ -162,6 +162,8 @@ export class WebsocketCommunication {
       case RESPONSE_EVENTS.playerRemoved:
         socket.to(roomId).emit(event, data);
         break;
+      case RESPONSE_EVENTS.gameStarted:
+        socket.to(roomId).emit(event, data);
     }
   }
 }

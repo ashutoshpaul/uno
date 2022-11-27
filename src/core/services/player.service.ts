@@ -31,4 +31,15 @@ export class PlayerService {
     };
   }
 
+  public static setPlayerActive(room: IRoom, identity: IMinifiedIdentity, isActive: boolean = true): IRoom {
+    const player: IPlayer | undefined = room.game.players.find(e => identity.player.id == e.id);
+    const index: number = room.game.players.findIndex(e => identity.player.id == e.id);
+    if (player && index != -1) {
+      player.isActive = isActive;
+      room.game.players[index] = player;
+    } else { throw new Error('Player not found'); }
+    
+    return room;
+  }
+
 }

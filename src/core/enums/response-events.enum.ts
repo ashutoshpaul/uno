@@ -7,6 +7,9 @@ export const enum RESPONSE_EVENTS {
   connectionEstablished = 'connectionEstablished',
   playerRemoved = 'playerRemoved',
 
+  gameStarted = 'gameStarted',
+  gameJoined = 'gameJoined',
+
   // startGame = 'startGame', // player started game
   // joinGame = 'joinGame', // player started game
   // waitingForPlayersToJoinGame = 'waitingForPlayersToJoinGame',
