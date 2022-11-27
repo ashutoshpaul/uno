@@ -5,7 +5,7 @@ import { IRoom } from "./../../interfaces/room.interface";
 import { GameService } from "./../../services/game.service";
 import { WebsocketCommunication } from "./../../websocket/communication/websocket.communication";
 import { RESPONSE_EVENTS } from "./../../enums/response-events.enum";
-import { ILobbyRoomResponse } from "./../../interfaces/response.interface";
+import { IJoinedPlayersResponse, ILobbyRoomResponse } from "./../../interfaces/response.interface";
 import { PlayerService } from "./../../services/player.service";
 const Redis = require("ioredis");
 
@@ -72,7 +72,7 @@ export class GameController {
    * 5. Return updated ILobbyRoomResponse object.
    * 
    * @param req: IMinifiedIdentity
-   * @param res: ILobbyRoomResponse
+   * @param res: IJoinedPlayersResponse
    */
   static async joinGame(req: Request, res: Response) {
     const socketId: string = req.headers['socket-id']+"";
@@ -90,15 +90,11 @@ export class GameController {
   
             const clientSocket = socketIO.sockets.sockets.get(socketId);
             if (clientSocket) {
-              const response: ILobbyRoomResponse = {
-                createdBy: updatedRoom.createdBy,
-                id: updatedRoom.id,
-                isGameStarted: updatedRoom.game.isGameStarted,
-                players: updatedRoom.game.players.map(player => <IMinifiedPlayer>{
-                  id: player.id,
-                  name: player.name,
-                }),
-                name: updatedRoom.name,
+              const joinedPlayersCount: number = updatedRoom.game.players.filter(e => e.isActive).length || 0;
+
+              const response: IJoinedPlayersResponse = {
+                joinedPlayersCount: joinedPlayersCount,
+                totalPlayersCount: updatedRoom.game.players.length,
               };
 
               WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.gameJoined, response);
@@ -109,6 +105,36 @@ export class GameController {
         } else { throw new Error('Room not found!'); }
       } catch (err) { console.log(err+""); }
     } else { throw new Error('IMinifiedIdentity and socketId required'); }
+  }
+
+  /**
+   * Returns number of players joined game (not room)
+   * 
+   * 1. Fetch room from 'rooms' (REDIS)
+   * 2. Count Player's 'isActive' = true.
+   * 3. Return response.
+   * 
+   * @param req roomId
+   * @param res IJoinedPlayersResponse
+   */
+  static async joinedPlayersCount(req: Request, res: Response) {
+    console.log('-------------------------------- player entered game');
+    const roomId: string = req.params.roomId;
+    if (roomId) {
+      try {
+        const room: IRoom = JSON.parse(await redis.hget('rooms', roomId));
+        if (room) {
+          const joinedPlayersCount: number = room.game.players.filter(e => e.isActive).length || 0;
+
+          const response: IJoinedPlayersResponse = {
+            joinedPlayersCount: joinedPlayersCount,
+            totalPlayersCount: room.game.players.length,
+          };
+
+          return res.json(response);
+        } else { throw new Error('room not found!'); }
+      } catch (err) { console.log(err+""); }
+    } else { throw new Error('roomId is required!'); } 
   }
 
 }

@@ -44,3 +44,8 @@ export interface IPlayerRemovedResponse {
   playerRemoved: IMinifiedPlayer;
   room: ILobbyRoomResponse;
 }
+
+export interface IJoinedPlayersResponse {
+  joinedPlayersCount: number;
+  totalPlayersCount: number;
+}

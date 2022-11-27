@@ -18,6 +18,7 @@ export class MainRoute {
 
     app.route("/game/start").post(GameController.startGame);
     app.route("/game/join").post(GameController.joinGame);
+    app.route("/game/joined-players-count/:roomId").get(GameController.joinedPlayersCount);
   }
 
 }
