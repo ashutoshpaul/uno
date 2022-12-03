@@ -158,6 +158,7 @@ export class WebsocketCommunication {
       case RESPONSE_EVENTS.roomLeft:
       case RESPONSE_EVENTS.gameStarted:
       case RESPONSE_EVENTS.gameJoined:
+      case RESPONSE_EVENTS.message:
         socket.to(roomId).emit(event, data);
         break;
     }

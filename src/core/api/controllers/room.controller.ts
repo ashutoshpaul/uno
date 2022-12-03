@@ -217,7 +217,7 @@ export class RoomController {
               await redis.hdel('identities', socketId);
               
               const clientSocket = socketIO.sockets.sockets.get(socketId);
-              if(clientSocket) {
+              if (clientSocket) {
                 const response: IPlayerLeftRoomResponse = {
                   playerName: playerLeavingRoom.player.name,
                   room: {
@@ -338,9 +338,7 @@ export class RoomController {
       } else {
         throw new Error("roomId, socketId and player-to-be-removed-identity required.");
       }
-    } catch (err) {
-      console.log(err);
-      throw new Error(err+""); }
+    } catch (err) { throw new Error(err+""); }
   }
 
 }

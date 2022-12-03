@@ -1,4 +1,5 @@
 import express from "express";
+import { ChatController } from "../controllers/chat.controller";
 import { GameController } from "../controllers/game.controller";
 import { PlayerController } from "../controllers/player.controller";
 import { RoomController } from "../controllers/room.controller";
@@ -19,6 +20,9 @@ export class MainRoute {
     app.route("/game/start").post(GameController.startGame);
     app.route("/game/join").post(GameController.joinGame);
     app.route("/game/joined-players-count/:roomId").get(GameController.joinedPlayersCount);
+
+    app.route("/messages/:roomId").get(ChatController.getMessages);
+    app.route("/messages/:roomId").post(ChatController.sendMessage);
   }
 
 }
