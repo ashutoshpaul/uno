@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Socket } from "socket.io";
 import { socketIO } from "./../../../app";
-import { ICreateRoomPayload, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse, IPlayerLeftRoomResponse, IPlayerRemovedResponse, IPlayerRemovePayload } from "src/core/interfaces/response.interface";
+import { ICreateRoomPayload, IJoinedPlayersResponse, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse, IPlayerLeftRoomResponse, IPlayerRemovedResponse, IPlayerRemovePayload } from "src/core/interfaces/response.interface";
 import { IMinifiedIdentity, IMinifiedPlayer } from "src/core/interfaces/minified.interface";
 import { IRoom } from "src/core/interfaces/room.interface";
 import { RoomService } from "./../../services/room.service";
@@ -188,7 +188,8 @@ export class RoomController {
    * 3. Update room's availability status.
    * 4. Remove player's identity from REDIS database 'identities'.
    * 5. Broadcast 'room-left' event to affected room players.
-   * 6. Remove socket from the room.
+   * 6. If game already started then broadcast 'gameJoined' event with IJoinedPlayersResponse to affected room players.
+   * 7. Remove socket from the room.
    */
   static async leaveRoom(req: Request, res: Response) {
     const roomId: string = req.params.id;
@@ -232,6 +233,17 @@ export class RoomController {
                 };
                 console.log('room left');
                 WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomLeft, response);
+
+                // if game already started then send RESPONSE_EVENTS.gameJoined with IJoinedPlayersResponse
+                if (room.game.isGameStarted) {
+                  const joinedPlayersCount: number = room.game.players.filter(e => e.isActive).length || 0;
+                  const joinedPlayersResponse: IJoinedPlayersResponse = {
+                    joinedPlayersCount: joinedPlayersCount,
+                    totalPlayersCount: room.game.players.length,
+                  };
+                  WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.gameJoined, joinedPlayersResponse);
+                }
+
                 RoomService.removeSocketFromRoom(clientSocket, room.id);
 
                 res.json({});
@@ -251,8 +263,9 @@ export class RoomController {
    * 3. Update room's availability status.
    * 4. Remove player's identity from REDIS database 'identities'.
    * 5. Broadcast 'player-removed' event to affected room players.
-   * 6. Remove removed-player's socket from the room.
-   * 7. In front-end, delete identity of removed-player
+   * 6. If game already started then broadcast 'gameJoined' event with IJoinedPlayersResponse to affected room players.
+   * 7. Remove removed-player's socket from the room.
+   * 8. In front-end, delete identity of removed-player
    */
   static async removePlayer(req: Request, res: Response) {
     const roomId: string = req.params.id;
@@ -303,6 +316,17 @@ export class RoomController {
               };
               console.log('player removed');
               WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.playerRemoved, response);
+
+              // if game already started then send RESPONSE_EVENTS.gameJoined with IJoinedPlayersResponse
+              if (room.game.isGameStarted) {
+                const joinedPlayersCount: number = room.game.players.filter(e => e.isActive).length || 0;
+                const joinedPlayersResponse: IJoinedPlayersResponse = {
+                  joinedPlayersCount: joinedPlayersCount,
+                  totalPlayersCount: room.game.players.length,
+                };
+                WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.gameJoined, joinedPlayersResponse);
+              }
+
               RoomService.removeSocketFromRoom(playerDeletedSocket, room.id);
 
               res.json(lobbyRoom);

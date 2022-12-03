@@ -8,14 +8,14 @@ export class PlayerService {
   public static createIdentity(player: IPlayer, room: IRoom): IMinifiedIdentity {
     return {
       player: {
-      id: player.id,
-      name: player.name,
+        id: player.id,
+        name: player.name,
       },
       room: {
-      id: room.id,
-      name: room.name,
-      createdBy: room.createdBy,
-      isAvailable: room.isAvailable,
+        id: room.id,
+        name: room.name,
+        createdBy: room.createdBy,
+        isAvailable: room.isAvailable,
       },
     };
   }
