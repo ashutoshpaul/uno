@@ -39,34 +39,34 @@ const CARDS_PACK: ICard[] = [
     }},
 
     // green
-    { id: "nine-0", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-0", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.zero, points: CARD_POINTS.zero 
     }},
-    { id: "nine-1", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-1", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.one, points: CARD_POINTS.one 
     }},
-    { id: "nine-2", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-2", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.two, points: CARD_POINTS.two 
     }},
-    { id: "nine-3", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-3", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.three, points: CARD_POINTS.three 
     }},
-    { id: "nine-4", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-4", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.four, points: CARD_POINTS.four 
     }},
-    { id: "nine-5", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-5", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.five, points: CARD_POINTS.five 
     }},
-    { id: "nine-6", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-6", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.six, points: CARD_POINTS.six 
     }},
-    { id: "nine-7", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-7", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.seven, points: CARD_POINTS.seven 
     }},
-    { id: "nine-8", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-8", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.eight, points: CARD_POINTS.eight 
     }},
-    { id: "nine-9", type: CARD_TYPE.number, data: <INumberCard>{
+    { id: "green-9", type: CARD_TYPE.number, data: <INumberCard>{
         color: COLOR_CODE.green, number: CARD_NUMBER.nine, points: CARD_POINTS.nine 
     }},
 
