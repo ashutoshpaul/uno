@@ -141,16 +141,17 @@ export class WebsocketCommunication {
    * @param socket client emitting the event
    * @param roomId client's room
    * @param event event type
-   * @param data data to be sent to other clients present in the room
+   * @param response data to be sent to other clients present in the room
    */
   public static emit(
     socket: Socket,
     roomId: string,
     event: PLAYER_EVENTS | GAME_EVENTS | RESPONSE_EVENTS, 
-    data: any
+    response: any
   ): void {
     switch(event) {
       case RESPONSE_EVENTS.roomDeleted:
+      case GAME_EVENTS.shuffle:
         socket.to(roomId).emit(event);
         break;
       case RESPONSE_EVENTS.roomJoined:
@@ -158,8 +159,26 @@ export class WebsocketCommunication {
       case RESPONSE_EVENTS.roomLeft:
       case RESPONSE_EVENTS.gameStarted:
       case RESPONSE_EVENTS.gameJoined:
-      case RESPONSE_EVENTS.message:
-        socket.to(roomId).emit(event, data);
+      case PLAYER_EVENTS.message:
+        socket.to(roomId).emit(event, response);
+        break;
+    }
+  }
+
+  /**
+   * 
+   * @param socket client emitting the event
+   * @param event event type
+   * @param response data to be sent to other client
+   */
+  public static emitToSocket(
+    socket: Socket,
+    event: PLAYER_EVENTS | GAME_EVENTS,
+    response: any
+  ): void {
+    switch(event) {
+      case GAME_EVENTS.distributeCards:
+        socket.emit(event, response);
         break;
     }
   }

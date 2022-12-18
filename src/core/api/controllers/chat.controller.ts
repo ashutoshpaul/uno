@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import { socketIO } from "./../../../app";
 import { IRoom } from "./../../interfaces/room.interface";
 import { WebsocketCommunication } from "./../../websocket/communication/websocket.communication";
-import { RESPONSE_EVENTS } from "./../../enums/response-events.enum";
 
 import { IMessage } from "./../../interfaces/message.interface";
 import { IPlayer } from "./../../interfaces/player.interface";
+import { PLAYER_EVENTS } from "./../../enums/player-events.enum";
 const Redis = require("ioredis");
 
 const redis = new Redis();
@@ -60,7 +60,7 @@ export class ChatController {
 
             const clientSocket = socketIO.sockets.sockets.get(socketId);
             if (clientSocket) {
-              WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.message, message);
+              WebsocketCommunication.emit(clientSocket, room.id, PLAYER_EVENTS.message, message);
               console.log('\'' + message.content + '\'' + 'message sent');
 
               res.json(message);

@@ -1,5 +1,6 @@
 import { CARDS } from "../constants/cards.constants";
 import { ICard } from "../interfaces/card-interfaces/card.interface";
+import { IGame } from "../interfaces/game.interface";
 import { IRoom } from "../interfaces/room.interface";
 
 export class GameService {
@@ -19,6 +20,20 @@ export class GameService {
     updatedRoom.game.isGameStarted = true;
 
     return updatedRoom;
+  }
+
+  // distribute TOTAL_CARDS cards each
+  public static distributeCards(game: IGame): IGame {
+    const TOTAL_CARDS: number = 7;
+    let card: ICard | undefined;
+
+    for (let i: number = 1; i <= TOTAL_CARDS; i++) {
+      for (let playerIndex: number = 0; playerIndex < game.players.length; playerIndex++) {
+        card = game.drawerDeckCards.pop();
+        card && game.players[playerIndex].cards.push(card);
+      }
+    }
+    return game;
   }
 
   /**

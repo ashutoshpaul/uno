@@ -20,9 +20,13 @@ export class MainRoute {
     app.route("/game/start").post(GameController.startGame);
     app.route("/game/join").post(GameController.joinGame);
     app.route("/game/joined-players-count/:roomId").get(GameController.joinedPlayersCount);
-
+    
     app.route("/messages/:roomId").get(ChatController.getMessages);
     app.route("/messages/:roomId").post(ChatController.sendMessage);
+    
+    // after game started
+    app.route("/game/distribute").post(GameController.distributeCards);
+    app.route("/game/:roomId/:playerId/state").get(GameController.getGameState);
   }
 
 }

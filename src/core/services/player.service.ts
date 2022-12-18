@@ -27,7 +27,7 @@ export class PlayerService {
       isActive: false,
       name: playerName,
       score: 0,
-      isCardsLeft: false,
+      isCardLeft: false,
     };
   }
 

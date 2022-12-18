@@ -104,14 +104,9 @@ export class RoomController {
             WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.roomJoined, response.room);
             
             return res.json(response);
-          }
-          throw new Error("socket is missing");
-        } else {
-          throw new Error("room is not available");
-        }
-      } else {
-        throw new Error("data and socket-id is required");
-      }
+          } else throw new Error("socket is missing");
+        } else throw new Error("room is not available");
+      } else throw new Error("data and socket-id is required");
     } catch (err) {
       console.error('joinRoom', err);
     }
