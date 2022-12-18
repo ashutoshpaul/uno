@@ -10,7 +10,11 @@ import { GAME_EVENTS } from "../enums/game-events.enum";
 import { IDistributeCardsWebsocketResponse } from "../interfaces/response.interface";
 
 /**
- * { top: ..., bottom: ...(me), left: ..., right: ... }
+ * * Handles emitting events from-single-player|backend to single|multiple-players once the game has started.
+ * * Converts IGame to IMappedGame.
+ * * Broadcasts events and also emit events to individual players.
+ * 
+ * * This class can be considered as a single place to catch all events emitted to frontend once the game has started.
  */
 export class GameMapService {
 
@@ -20,9 +24,6 @@ export class GameMapService {
    */
   public static getGameState(playerId: string, room: IRoom): IMappedGame {
     const mappedGame: IMappedGame = {
-      chats: room.game.chats,
-      discardPileCards: room.game.discardPileCards,
-      drawerDeckCards: room.game.drawerDeckCards,
       isGameStarted: room.game.isGameStarted,
       lastDrawnCard: room.game.lastDrawnCard,
       mappedPlayers: GameMapService._mapToMappedPlayers(playerId, room.game.players),
@@ -53,9 +54,6 @@ export class GameMapService {
 
     socketIds.forEach(e => {
       const mappedGame: IMappedGame = {
-          chats: room.game.chats,
-          discardPileCards: room.game.discardPileCards,
-          drawerDeckCards: room.game.drawerDeckCards,
           isGameStarted: room.game.isGameStarted,
           lastDrawnCard: room.game.lastDrawnCard,
           mappedPlayers: GameMapService._mapToMappedPlayers(e.playerId,room.game.players),
