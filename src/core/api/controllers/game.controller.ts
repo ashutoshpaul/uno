@@ -145,12 +145,13 @@ export class GameController {
    * 
    * 1. Check if player is Host. If yes then Step 2.
    * 2. Check if game has started and all players have joined. If yes then Step 3.
-   * 3. Check if cards are already distributed. If yes then then jump to Step 7.
+   * 3. Check if cards are already distributed. If yes then then jump to Step 9.
    * 4. Distribute cards.
-   * 5. Update room in 'rooms' (REDIS).
-   * 6. Wait 1s. Then broadcast 'shuffle' event to affected room players.
-   * 7. Wait 3s. Then broadcast 'distribute' event to affected room players one by one with IMappedGame.
-   * 8. Return IDistributeCardsResponse to the Host.
+   * 5. Update IPlayer.isCardLeft = true for all players.
+   * 6. Update room in 'rooms' (REDIS).
+   * 7. Wait 1s. Then broadcast 'shuffle' event to affected room players.
+   * 8. Wait 2s. Then broadcast 'distribute' event to affected room players one by one with IMappedGame.
+   * 9. Return IDistributeCardsResponse to the Host.
    * 
    * @param req IMinifiedIdentity
    * @param res IDistributeCardsResponse
@@ -174,6 +175,7 @@ export class GameController {
             if (!isCardsAlreadyDistributed) {
               console.log('distributing cards...');
               room.game = GameService.distributeCards(room.game);
+              room.game.players.map(e => e.isCardLeft = true);
               await redis.hset("rooms", room.id, JSON.stringify(room)); // update
 
               const clientSocket = socketIO.sockets.sockets.get(socketId);
@@ -181,7 +183,7 @@ export class GameController {
                 setTimeout(() => {
                   setTimeout(() => {
                     GameMapService.broadcastGameStateOnDistributeCards(room);
-                  }, 3000);
+                  }, 2000);
                   
                   WebsocketCommunication.emit(clientSocket, room.id, GAME_EVENTS.shuffle, null);
                   res.json(<IDistributeCardsResponse>{ isCardsShuffledEventEmitted: true });

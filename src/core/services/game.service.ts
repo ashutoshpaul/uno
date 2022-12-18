@@ -22,7 +22,7 @@ export class GameService {
     return updatedRoom;
   }
 
-  // distribute TOTAL_CARDS cards each
+  // distribute TOTAL_CARDS cards to players
   public static distributeCards(game: IGame): IGame {
     const TOTAL_CARDS: number = 7;
     let card: ICard | undefined;
