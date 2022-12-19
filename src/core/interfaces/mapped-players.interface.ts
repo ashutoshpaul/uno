@@ -1,8 +1,8 @@
 import { IPlayer, ISecuredPlayer } from "./player.interface";
 
 export interface IMappedPlayers {
-  front: ISecuredPlayer | null;
+  top: ISecuredPlayer | null;
   right: ISecuredPlayer | null;
   left: ISecuredPlayer | null;
-  me: IPlayer; // me
+  bottom: IPlayer; // me
 }

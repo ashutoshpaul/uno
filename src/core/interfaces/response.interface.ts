@@ -66,5 +66,5 @@ export interface IDistributeCardsWebsocketResponse {
    * * Use hostPosition as a start position to distribute cards.
    * * Note: Distribution of cards starts from Host.
    */
-  hostPosition: 'left' | 'front' | 'right' | 'me';
+  hostPosition: 'left' | 'top' | 'right' | 'bottom';
 }

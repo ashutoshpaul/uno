@@ -60,7 +60,7 @@ export class GameMapService {
       };
       const response: IDistributeCardsWebsocketResponse = {
         hostPosition: GameMapService._getHostPosition(room, mappedGame),
-        mappedGame: mappedGame
+        mappedGame: mappedGame,
       };
       const clientSocket = socketIO.sockets.sockets.get(e.socketId);
       if (clientSocket) {
@@ -80,30 +80,30 @@ export class GameMapService {
    * * Examples
    * 1. i/p: [{ id: 123 }, { id: 45 }, { id: 67 }, { id: 89 }]
    * > for id = 45
-   * > o/p: { left: { id: 67 }, front: { id: 89 }, right: { id: 123 }, me: { id: 45 } }
+   * > o/p: { left: { id: 67 }, top: { id: 89 }, right: { id: 123 }, bottom: { id: 45 } }
    * 
    * > for id = 67
-   * > o/p: { left: { id: 89 }, front: { id: 123 }, right: { id: 45 }, me: { id: 67 } }
+   * > o/p: { left: { id: 89 }, top: { id: 123 }, right: { id: 45 }, bottom: { id: 67 } }
    * 
    * > for id = 89
-   * > o/p: { left: { id: 123 }, front: { id: 45 }, right: { id: 67 }, me: { id: 89 } }
+   * > o/p: { left: { id: 123 }, top: { id: 45 }, right: { id: 67 }, bottom: { id: 89 } }
    * 
    * 2. i/p: [{ id: 123 }, { id: 45 }, { id: 67 }]
    * > for id = 45
-   * > o/p: { left: { id: 67 }, front: null, right: { id: 123 }, me: { id: 45 } }
+   * > o/p: { left: { id: 67 }, top: null, right: { id: 123 }, bottom: { id: 45 } }
    * 
    * > for id = 67
-   * > o/p: { left: { id: 123 }, front: null, right: { id: 45 }, me: { id: 67 } }
+   * > o/p: { left: { id: 123 }, top: null, right: { id: 45 }, bottom: { id: 67 } }
    * 
    * 3. i/p: [{ id: 123 }, { id: 45 }]
    * > for id = 45
-   * > o/p: { left: null, front: { id: 123 }, right: null, me: { id: 45 } } 
+   * > o/p: { left: null, top: { id: 123 }, right: null, bottom: { id: 45 } } 
    */
   private static _mapToMappedPlayers(playerId: string, players: IPlayer[]): IMappedPlayers {
     const me: IPlayer | undefined = players.find(e => e.id == playerId);
     const TOTAL_PLAYERS: number = players.length;
     if (me) {
-      let frontPlayer: ISecuredPlayer | null = null;
+      let topPlayer: ISecuredPlayer | null = null;
       let leftPlayer: ISecuredPlayer | null = null;
       let rightPlayer: ISecuredPlayer | null = null;
 
@@ -112,7 +112,7 @@ export class GameMapService {
       switch (TOTAL_PLAYERS) {
         case 2:
           leftPlayer = null;
-          frontPlayer = (myIndex == 0)
+          topPlayer = (myIndex == 0)
             ? GameMapService._mapToSecuredPlayer(players[1])
             : GameMapService._mapToSecuredPlayer(players[0]);
           rightPlayer = null;
@@ -120,7 +120,7 @@ export class GameMapService {
         case 3:
           if (++currentIndex >= TOTAL_PLAYERS) { currentIndex = 0; }
           leftPlayer = GameMapService._mapToSecuredPlayer(players[currentIndex]);
-          frontPlayer = null;
+          topPlayer = null;
           if (++currentIndex >= TOTAL_PLAYERS) { currentIndex = 0; }
           rightPlayer = GameMapService._mapToSecuredPlayer(players[currentIndex]);
           break;
@@ -128,15 +128,15 @@ export class GameMapService {
           if (++currentIndex >= TOTAL_PLAYERS) { currentIndex = 0; }
           leftPlayer = GameMapService._mapToSecuredPlayer(players[currentIndex]);
           if (++currentIndex >= TOTAL_PLAYERS) { currentIndex = 0; }
-          frontPlayer = GameMapService._mapToSecuredPlayer(players[currentIndex]);
+          topPlayer = GameMapService._mapToSecuredPlayer(players[currentIndex]);
           if (++currentIndex >= TOTAL_PLAYERS) { currentIndex = 0; }
           rightPlayer = GameMapService._mapToSecuredPlayer(players[currentIndex]);
           break;
       }
       const mappedPlayers: IMappedPlayers = {
-        front: frontPlayer,
+        top: topPlayer,
         left: leftPlayer,
-        me: me,
+        bottom: me,
         right: rightPlayer,
       };
       return mappedPlayers;
@@ -154,11 +154,11 @@ export class GameMapService {
     };
   }
 
-  private static _getHostPosition(room: IRoom, mappedGame: IMappedGame): 'left' | 'front' | 'right' | 'me' {
+  private static _getHostPosition(room: IRoom, mappedGame: IMappedGame): 'left' | 'top' | 'right' | 'bottom' {
     if(mappedGame.mappedPlayers.left?.id == room.createdBy.id) return 'left';
-    else if(mappedGame.mappedPlayers.front?.id == room.createdBy.id) return 'front';
+    else if(mappedGame.mappedPlayers.top?.id == room.createdBy.id) return 'top';
     else if(mappedGame.mappedPlayers.right?.id == room.createdBy.id) return 'right';
-    return 'me';
+    return 'bottom';
   }
 
 }
