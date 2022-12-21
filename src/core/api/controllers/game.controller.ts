@@ -149,9 +149,8 @@ export class GameController {
    * 4. Distribute cards.
    * 5. Update IPlayer.isCardLeft = true for all players.
    * 6. Update room in 'rooms' (REDIS).
-   * 7. Wait 1s. Then broadcast 'shuffle' event to affected room players.
-   * 8. Wait 2s. Then broadcast 'distribute' event to affected room players one by one with IMappedGame.
-   * 9. Return IDistributeCardsResponse to the Host.
+   * 7. Broadcast 'distribute' event to affected room players one by one with IMappedGame.
+   * 8. Return IDistributeCardsResponse to the Host.
    * 
    * @param req IMinifiedIdentity
    * @param res IDistributeCardsResponse
@@ -180,15 +179,8 @@ export class GameController {
 
               const clientSocket = socketIO.sockets.sockets.get(socketId);
               if (clientSocket) {
-                setTimeout(() => {
-                  setTimeout(() => {
-                    GameMapService.broadcastGameStateOnDistributeCards(room);
-                  }, 2000);
-                  
-                  WebsocketCommunication.emit(clientSocket, room.id, GAME_EVENTS.shuffle, null);
-                  res.json(<IDistributeCardsResponse>{ isCardsShuffledEventEmitted: true });
-                }, 1000);
-                
+                GameMapService.broadcastGameStateOnDistributeCards(room);
+                return res.json(<IDistributeCardsResponse>{ isCardsShuffledEventEmitted: true });
               } else throw new Error("socket is missing");
             } else {
               console.log('cards already distributed (not an error).');
