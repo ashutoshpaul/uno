@@ -1,11 +1,10 @@
 import { ValidColorCodeType } from "../enums/card-enums/card-colors.enum";
 import { DIRECTION } from "../enums/direction.enum";
-import { PLAYER_POSITION } from "../enums/player-position.enum";
 import { ICard } from "./card-interfaces/card.interface";
 import { IMappedPlayers } from "./mapped-players.interface";
 import { IMessage } from "./message.interface";
 import { IMinifiedPlayer } from "./minified.interface";
-import { IPlayer } from "./player.interface";
+import { ICurrentPlayer, IPlayer } from "./player.interface";
 
 /**
  * * Stores the current game state in REDIS.
@@ -40,8 +39,5 @@ export interface IMappedGame {
   
   lastDrawnCard?: ICard;
   currentColor?: ValidColorCodeType;
-  currentPlayer?: {
-    player: IMinifiedPlayer;
-    position: PLAYER_POSITION;
-  };
+  currentPlayer?: ICurrentPlayer;
 }

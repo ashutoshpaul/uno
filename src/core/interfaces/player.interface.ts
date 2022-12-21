@@ -1,4 +1,6 @@
+import { PLAYER_POSITION } from "../enums/player-position.enum";
 import { ICard } from "./card-interfaces/card.interface";
+import { IMinifiedPlayer } from "./minified.interface";
 
 export interface IPlayer {
   id: string;
@@ -31,4 +33,12 @@ export interface ISecuredPlayer {
 
   cardsCount: number;  // cards in the player's cards tray.
   isCardLeft: boolean; // false when the player has played all his/her cards
+}
+
+/**
+ * Used in IMappedPlayers
+ */
+export interface ICurrentPlayer {
+  player: IMinifiedPlayer;
+  position: PLAYER_POSITION;
 }
