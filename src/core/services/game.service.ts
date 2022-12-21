@@ -13,7 +13,6 @@ export class GameService {
   public static newGame(room: IRoom): IRoom {
     const updatedRoom: IRoom = room;
     updatedRoom.game.discardPileCards = [];
-    updatedRoom.game.lastDrawnCard = null;
     updatedRoom.game.drawerDeckCards = GameService._shuffleCards(CARDS);
     
     updatedRoom.isAvailable = false;

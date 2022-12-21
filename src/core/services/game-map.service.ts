@@ -1,4 +1,3 @@
-import { Socket } from "socket.io";
 import { IMappedGame } from "../interfaces/game.interface";
 import { IMappedPlayers } from "../interfaces/mapped-players.interface";
 import { IPlayer, ISecuredPlayer } from "../interfaces/player.interface";
@@ -8,6 +7,7 @@ import { socketIO } from "../../app";
 import { WebsocketCommunication } from "../websocket/communication/websocket.communication";
 import { GAME_EVENTS } from "../enums/game-events.enum";
 import { IDistributeCardsWebsocketResponse } from "../interfaces/response.interface";
+import { PLAYER_POSITION } from "../enums/player-position.enum";
 
 /**
  * * Handles emitting events from-single-player|backend to single|multiple-players once the game has started.
@@ -26,6 +26,12 @@ export class GameMapService {
     const mappedGame: IMappedGame = {
       isGameStarted: room.game.isGameStarted,
       lastDrawnCard: room.game.lastDrawnCard,
+      currentDirection: room.game.currentDirection,
+      currentColor: room.game.currentColor,
+      // currentPlayer: {
+      //   player: ,
+      //   position: ,
+      // }, // TODO
       mappedPlayers: GameMapService._mapToMappedPlayers(playerId, room.game.players),
     };
     return mappedGame;
@@ -55,7 +61,7 @@ export class GameMapService {
     socketIds.forEach(e => {
       const mappedGame: IMappedGame = {
           isGameStarted: room.game.isGameStarted,
-          lastDrawnCard: room.game.lastDrawnCard,
+          currentDirection: room.game.currentDirection,
           mappedPlayers: GameMapService._mapToMappedPlayers(e.playerId,room.game.players),
       };
       const response: IDistributeCardsWebsocketResponse = {
@@ -154,11 +160,11 @@ export class GameMapService {
     };
   }
 
-  private static _getHostPosition(room: IRoom, mappedGame: IMappedGame): 'left' | 'top' | 'right' | 'bottom' {
-    if(mappedGame.mappedPlayers.left?.id == room.createdBy.id) return 'left';
-    else if(mappedGame.mappedPlayers.top?.id == room.createdBy.id) return 'top';
-    else if(mappedGame.mappedPlayers.right?.id == room.createdBy.id) return 'right';
-    return 'bottom';
+  private static _getHostPosition(room: IRoom, mappedGame: IMappedGame): PLAYER_POSITION {
+    if(mappedGame.mappedPlayers.left?.id == room.createdBy.id) return PLAYER_POSITION.left;
+    else if(mappedGame.mappedPlayers.top?.id == room.createdBy.id) return PLAYER_POSITION.top;
+    else if(mappedGame.mappedPlayers.right?.id == room.createdBy.id) return PLAYER_POSITION.right;
+    return PLAYER_POSITION.bottom;
   }
 
 }

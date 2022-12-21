@@ -1,4 +1,5 @@
 import { Socket } from "socket.io";
+import { DIRECTION } from "../enums/direction.enum";
 import { Uuid } from "../helpers/uuid.helper";
 import { IGame } from "../interfaces/game.interface";
 import { IMinifiedIdentity } from "../interfaces/minified.interface";
@@ -28,7 +29,7 @@ export class RoomService {
         drawerDeckCards: [],
         isGameStarted: false,
         players: [player],
-        lastDrawnCard: null,
+        currentDirection: DIRECTION.clockwise,
       },
       isAvailable: true,
     }
