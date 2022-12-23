@@ -54,8 +54,8 @@ export interface IJoinedPlayersResponse {
 
 export interface IDistributeCardsResponse {
   /**
-   * If isCardsShuffledEventEmitted == true, that means 'distribute-cards' functionality is invoked
-   * in backend.
+   * If isCardsShuffledEventEmitted == true, that means 'distribute-cards' functionality is invoked in backend
+   * and 'shuffle-cards' event will be trigerred to the client (host sending http request).
    */
   isCardsShuffledEventEmitted: boolean
 }
