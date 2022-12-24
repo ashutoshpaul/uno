@@ -1,4 +1,8 @@
 import { CARDS } from "../constants/cards.constants";
+import { COLOR_CODE } from "../enums/card-enums/card-colors.enum";
+import { CARD_ACTION, CARD_TYPE } from "../enums/card-enums/card-types.enum";
+import { DIRECTION } from "../enums/direction.enum";
+import { IActionCard } from "../interfaces/card-interfaces/card-data.interface";
 import { ICard } from "../interfaces/card-interfaces/card.interface";
 import { IGame } from "../interfaces/game.interface";
 import { IRoom } from "../interfaces/room.interface";
@@ -33,6 +37,22 @@ export class GameService {
       }
     }
     return game;
+  }
+
+  public static discardFirstCard(game: IGame): IGame {
+    const updatedGame: IGame = game;
+    const lastDrawnCard: ICard | undefined = updatedGame.drawerDeckCards.pop();
+    if (lastDrawnCard) {
+      updatedGame.discardPileCards.push(lastDrawnCard);
+      updatedGame.lastDrawnCard = lastDrawnCard;
+      updatedGame.currentColor = lastDrawnCard.data.color != COLOR_CODE.black ? lastDrawnCard.data.color : undefined;
+      if (lastDrawnCard.type == CARD_TYPE.action && (lastDrawnCard.data as IActionCard).action == CARD_ACTION.reverse) {
+        updatedGame.currentDirection = game.currentDirection == DIRECTION.clockwise
+          ? DIRECTION.antiClockwise
+          : DIRECTION.clockwise
+      }
+    } else { throw new Error('drawerDeck is empty!'); }
+    return updatedGame;
   }
 
   /**

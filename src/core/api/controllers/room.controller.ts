@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Socket } from "socket.io";
 import { socketIO } from "./../../../app";
 import { ICreateRoomPayload, IJoinedPlayersResponse, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse, IPlayerLeftRoomResponse, IPlayerRemovedResponse, IPlayerRemovePayload } from "src/core/interfaces/response.interface";
-import { IMinifiedIdentity, IMinifiedPlayer } from "src/core/interfaces/minified.interface";
+import { IMinifiedIdentity, IMinifiedPlayer, IMinifiedRoom } from "src/core/interfaces/minified.interface";
 import { IRoom } from "src/core/interfaces/room.interface";
 import { RoomService } from "./../../services/room.service";
 import { PlayerService } from "./../../services/player.service";
@@ -44,8 +44,16 @@ export class RoomController {
         list.push(JSON.parse(rawData[key])); 
       } 
     }
-    const mappedList: {key: string, value: IRoom}[] = list;
-    res.json(mappedList);
+    const mappedList: IRoom[] = list;
+    const response: IMinifiedRoom[] = mappedList.map(room => {
+      return {
+        id: room.id,
+        isAvailable: room.isAvailable,
+        name: room.name,
+        createdBy: room.createdBy,
+      };
+    });
+    res.json(response);
   }
 
   static async createRoom(req: Request, res: Response) {

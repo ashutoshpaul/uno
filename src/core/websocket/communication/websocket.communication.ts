@@ -178,6 +178,7 @@ export class WebsocketCommunication {
   ): void {
     switch(event) {
       case GAME_EVENTS.distributeCards:
+      case GAME_EVENTS.discardFirstCard:
         socket.emit(event, response);
         break;
     }

@@ -1,4 +1,4 @@
-import { IMappedGame } from "../interfaces/game.interface";
+import { IGame, IMappedGame, IMappedGameChanges } from "../interfaces/game.interface";
 import { IMappedPlayers } from "../interfaces/mapped-players.interface";
 import { IPlayer, ISecuredPlayer } from "../interfaces/player.interface";
 import { IRoom } from "../interfaces/room.interface";
@@ -8,6 +8,11 @@ import { WebsocketCommunication } from "../websocket/communication/websocket.com
 import { GAME_EVENTS } from "../enums/game-events.enum";
 import { IDistributeCardsWebsocketResponse } from "../interfaces/response.interface";
 import { PLAYER_POSITION } from "../enums/player-position.enum";
+
+interface IPlayerSocket {
+  playerId: string;
+  socketId: string;
+}
 
 /**
  * * Handles emitting events from-single-player|backend to single|multiple-players once the game has started.
@@ -42,23 +47,18 @@ export class GameMapService {
    * * Each IMappedPlayers object is sent to respective player's socketId.
    * * One by one response is emitted to each of the players of the affected room.
    * 
-   * 1. Fetch socketIds from REDIS ('identities') of all players in the room.
-   * 2. Store socketIds in { playerId: string, socketId: string }[].
-   * 3. Iterate through players list.
+   * 1. Fetch socketIds from REDIS ('identities') of all players in the room and Store socketIds in IPlayerSocket[].
+   * 2. Iterate through players list.
    *  > * i. Generate IMappedPlayers.
-   *  > * ii. Emit response to iterated player's socketId.
+   *  > * ii. Emit 'distribute' event with response to iterated player's socketId.
    * 
-   * Usecase: On distribute cards after cards-shuffled.
+   * * Usecase: On distribute cards after cards-shuffled.
+   * * After this event, 'discard-first-card' is invoked.
    */
   public static async broadcastGameStateOnDistributeCards(room: IRoom) {
-    const socketIds: { playerId: string, socketId: string }[] = [];
-    for (let player of room.game.players) {
-      const socketId: string | null = await RoomService.getSocketId(player.id);
-      if (socketId) socketIds.push({playerId: player.id, socketId: socketId });
-      else throw new Error('GameMapService > socketId not found!');
-    }
+    const playerSockets: IPlayerSocket[] = await GameMapService._fetchSocketIds(room.game.players);
 
-    socketIds.forEach(e => {
+    playerSockets.forEach(e => {
       const mappedGame: IMappedGame = {
           isGameStarted: room.game.isGameStarted,
           currentDirection: room.game.currentDirection,
@@ -72,8 +72,45 @@ export class GameMapService {
       if (clientSocket) {
         WebsocketCommunication.emitToSocket(clientSocket, GAME_EVENTS.distributeCards, response);
         console.log('event emitted to ' + e.socketId);
-      } else { throw new Error("socket ("+ e.socketId +") is missing!"); }
+      } else {
+        // TODO remove error part if creates further breakdown
+        throw new Error("broadcastGameStateOnDistributeCards() socket ("+ e.socketId +") is missing!");
+      }
     });
+  }
+
+  /**
+   * * Broadcasts 'discard-first-card' to room players after 'distribute-cards' event.
+   * * Each IMappedGameChanges object is sent to respective player's socketId.
+   * * One by one response is emitted to each of the players of the affected room.
+   * 
+   * 1. Fetch socketIds from REDIS ('identities') of all players in the room and Store socketIds in IPlayerSocket[].
+   * 2. Iterate through players list.
+   *  > * i. Emit 'discard-first-card' event with response to iterated player's socketId.
+   * 
+   * Usecase: On discardFirstCard after cards-distributed.
+   */
+  public static async broadcastDiscardFirstCardEvent(game: IGame) {
+    const playerSockets: IPlayerSocket[] = await GameMapService._fetchSocketIds(game.players);
+
+    if (game.lastDrawnCard) {
+      const response: IMappedGameChanges = {
+        currentDirection: game.currentDirection,
+        lastDrawnCard: game.lastDrawnCard,
+        ...(game.currentColor && { currentColor: game.currentColor }),
+      };
+
+      playerSockets.forEach(e => {
+        const clientSocket = socketIO.sockets.sockets.get(e.socketId);
+        if (clientSocket) {
+          WebsocketCommunication.emitToSocket(clientSocket, GAME_EVENTS.discardFirstCard, response);
+        } else {
+          // TODO remove error part if creates further breakdown
+          throw new Error("broadcastDiscardFirstCardEvent() socket ("+ e.socketId +") is missing!");
+        }
+      });
+
+    } else { throw new Error("lastDrawnCard is not present!"); }
   }
 
   /**
@@ -158,6 +195,16 @@ export class GameMapService {
       name: player.name,
       score: player.score,
     };
+  }
+
+  private static async _fetchSocketIds(players: IPlayer[]): Promise<IPlayerSocket[]> {
+    const playerSockets: IPlayerSocket[] = [];
+    for (let player of players) {
+      const socketId: string | null = await RoomService.getSocketId(player.id);
+      if (socketId) playerSockets.push({playerId: player.id, socketId: socketId });
+      else throw new Error('broadcastGameStateOnDistributeCards > socketId not found!');
+    }
+    return playerSockets;
   }
 
   private static _getHostPosition(room: IRoom, mappedGame: IMappedGame): PLAYER_POSITION {
