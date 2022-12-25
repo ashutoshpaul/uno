@@ -29,7 +29,6 @@ export class RoomService {
         drawerDeckCards: [],
         isGameStarted: false,
         players: [player],
-        currentDirection: DIRECTION.clockwise,
       },
       isAvailable: true,
     }

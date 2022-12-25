@@ -39,6 +39,9 @@ export class GameService {
     return game;
   }
 
+  /**
+   * Logically discards-first-card for updating the game's state in 'rooms' REDIS.
+   */
   public static discardFirstCard(game: IGame): IGame {
     const updatedGame: IGame = game;
     const lastDrawnCard: ICard | undefined = updatedGame.drawerDeckCards.pop();
@@ -46,6 +49,9 @@ export class GameService {
       updatedGame.discardPileCards.push(lastDrawnCard);
       updatedGame.lastDrawnCard = lastDrawnCard;
       updatedGame.currentColor = lastDrawnCard.data.color != COLOR_CODE.black ? lastDrawnCard.data.color : undefined;
+      updatedGame.currentDirection = game.currentDirection ? game.currentDirection : DIRECTION.clockwise;
+      
+      // handles reverse-action on firstDrawnCard. TODO: habdle other actions like +4, change-color, etc.
       if (lastDrawnCard.type == CARD_TYPE.action && (lastDrawnCard.data as IActionCard).action == CARD_ACTION.reverse) {
         updatedGame.currentDirection = game.currentDirection == DIRECTION.clockwise
           ? DIRECTION.antiClockwise

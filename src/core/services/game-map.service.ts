@@ -61,7 +61,6 @@ export class GameMapService {
     playerSockets.forEach(e => {
       const mappedGame: IMappedGame = {
           isGameStarted: room.game.isGameStarted,
-          currentDirection: room.game.currentDirection,
           mappedPlayers: GameMapService._mapToMappedPlayers(e.playerId,room.game.players),
       };
       const response: IDistributeCardsWebsocketResponse = {
@@ -95,9 +94,9 @@ export class GameMapService {
 
     if (game.lastDrawnCard) {
       const response: IMappedGameChanges = {
-        currentDirection: game.currentDirection,
         lastDrawnCard: game.lastDrawnCard,
         ...(game.currentColor && { currentColor: game.currentColor }),
+        ...(game.currentDirection && {currentDirection: game.currentDirection}),
       };
 
       playerSockets.forEach(e => {

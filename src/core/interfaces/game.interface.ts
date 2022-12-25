@@ -19,11 +19,11 @@ export interface IGame {
   chats: IMessage[];
   isGameStarted: boolean;
 
-  currentDirection: DIRECTION;
-
-  lastDrawnCard?: ICard;
   currentColor?: ValidColorCodeType;
   currentPlayer?: IMinifiedPlayer;
+  currentDirection?: DIRECTION;
+  lastDrawnCard?: ICard;
+
 }
 
 /**
@@ -35,11 +35,11 @@ export interface IMappedGame {
   mappedPlayers: IMappedPlayers;
   isGameStarted: boolean;
   
-  currentDirection: DIRECTION;
   
-  lastDrawnCard?: ICard;
   currentColor?: ValidColorCodeType;
+  currentDirection?: DIRECTION;
   currentPlayer?: ICurrentPlayer;
+  lastDrawnCard?: ICard;
 }
 
 /**
