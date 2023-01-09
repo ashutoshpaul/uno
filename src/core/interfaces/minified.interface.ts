@@ -7,6 +7,8 @@
  * REDIS Schema: { { socket.id (key): IConnection (value) }, ...}
  */
 
+import { STATUS } from "../enums/status.enum";
+
 export interface IMinifiedRoom {
   id: string;
   name: string;
@@ -17,6 +19,14 @@ export interface IMinifiedRoom {
 export interface IMinifiedPlayer {
   id: string;
   name: string;
+  status: STATUS;
+
+  /**
+   * * Should ONLY be present in 'identities' (REDIS)
+   * * Add as soon as connection-disconnected.
+   * * Remove on connection-reestablished (socket-id updated).
+   */
+  disconnectedAt?: Date;
 }
 
 export interface IMinifiedIdentity {

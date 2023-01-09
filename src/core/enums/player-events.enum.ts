@@ -1,4 +1,4 @@
-// all actions performed by the player
+// all actions performed by player
 export const enum PLAYER_EVENTS {
   play = 'play',
   wait = 'wait', // wait for his/her turn to play
@@ -14,8 +14,8 @@ export const enum PLAYER_EVENTS {
   allJoinedGame = 'allJoinedGame',
   leaveGame = 'leaveGame',
 
-  playerWentOffline = 'playerWentOffline',
-  playerCameBackOnline = 'playerCameBackOnline',
+  // playerWentOffline = 'playerWentOffline',
+  // playerCameBackOnline = 'playerCameBackOnline',
   removePlayer = 'removePlayer',
 
   drawCard = 'drawCard',
@@ -23,5 +23,7 @@ export const enum PLAYER_EVENTS {
   skipChance = 'skipChance', // when you already picked a card and don't want to discard
   uno = 'uno', // player shouts UNO
 
-  message = 'message' // player sent message in chat
+  message = 'message', // player sent message in chat
+
+  aborted = 'aborted', // Represents player has closed the tab (also sent on page-unload).
 }

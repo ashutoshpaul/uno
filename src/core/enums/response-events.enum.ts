@@ -10,6 +10,12 @@ export const enum RESPONSE_EVENTS {
   gameStarted = 'gameStarted',
   gameJoined = 'gameJoined',
 
+  /**
+   * when player goes online|offline.
+   * in response, ConnectionUpdatedResponse is sent to all online-available players.
+   */
+  connectionToggled = 'connectionToggled',
+
   // startGame = 'startGame', // player started game
   // joinGame = 'joinGame', // player started game
   // waitingForPlayersToJoinGame = 'waitingForPlayersToJoinGame',

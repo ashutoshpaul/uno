@@ -1,6 +1,6 @@
-import { ValidColorCodeType, COLOR_CODE } from "src/core/enums/card-enums/card-colors.enum";
-import { NumberCardPointsType, ActionCardPointsType, WildCardPointsType } from "src/core/enums/card-enums/card-points.enum";
-import { CARD_NUMBER, CARD_ACTION, CARD_WILD } from "src/core/enums/card-enums/card-types.enum";
+import { ValidColorCodeType, COLOR_CODE } from "./../../enums/card-enums/card-colors.enum";
+import { NumberCardPointsType, ActionCardPointsType, WildCardPointsType } from "./../../enums/card-enums/card-points.enum";
+import { CARD_NUMBER, CARD_ACTION, CARD_WILD } from "./../../enums/card-enums/card-types.enum";
 
 export interface INumberCard {
   number: CARD_NUMBER;

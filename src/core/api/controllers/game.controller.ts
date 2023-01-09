@@ -10,6 +10,7 @@ import { PlayerService } from "./../../services/player.service";
 import { IMappedGame } from "./../../interfaces/game.interface";
 import { GameMapService } from "./../../services/game-map.service";
 import { GAME_EVENTS } from "./../../enums/game-events.enum";
+import { STATUS } from "./../../enums/status.enum";
 const Redis = require("ioredis");
 
 const redis = new Redis();
@@ -52,6 +53,7 @@ export class GameController {
                 players: updatedRoom.game.players.map(player => <IMinifiedPlayer>{
                   id: player.id,
                   name: player.name,
+                  status: player.status,
                 }),
                 name: updatedRoom.name,
               };
@@ -93,11 +95,11 @@ export class GameController {
   
             const clientSocket = socketIO.sockets.sockets.get(socketId);
             if (clientSocket) {
-              const joinedPlayersCount: number = updatedRoom.game.players.filter(e => e.isActive).length || 0;
-
+              const joinedPlayersCount: number = room.game.players.filter(e => e.isActive && e.status != STATUS.aborted).length || 0;
+              const totalAvailablePlayers: number = room.game.players.filter(e => e.status != STATUS.aborted).length || 0;
               const response: IJoinedPlayersResponse = {
                 joinedPlayersCount: joinedPlayersCount,
-                totalPlayersCount: updatedRoom.game.players.length,
+                totalPlayersCount: totalAvailablePlayers,
               };
 
               WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.gameJoined, response);
@@ -126,12 +128,12 @@ export class GameController {
       try {
         const room: IRoom = JSON.parse(await redis.hget('rooms', roomId));
         if (room) {
-          const joinedPlayersCount: number = room.game.players.filter(e => e.isActive).length || 0;
-
-          const response: IJoinedPlayersResponse = {
-            joinedPlayersCount: joinedPlayersCount,
-            totalPlayersCount: room.game.players.length,
-          };
+          const joinedPlayersCount: number = room.game.players.filter(e => e.isActive && e.status != STATUS.aborted).length || 0;
+            const totalAvailablePlayers: number = room.game.players.filter(e => e.status != STATUS.aborted).length || 0;
+            const response: IJoinedPlayersResponse = {
+              joinedPlayersCount: joinedPlayersCount,
+              totalPlayersCount: totalAvailablePlayers,
+            };
 
           return res.json(response);
         } else { throw new Error('room not found!'); }
@@ -167,10 +169,11 @@ export class GameController {
         if (room) {
           const isHost: boolean = room.createdBy.id == identity.player.id;
           const hasGameStarted: boolean = room.game.isGameStarted;
-          const hasAllPlayersJoined: boolean = room.game.players.every(e => e.isActive);
+          const hasAllPlayersJoined: boolean = room.game.players.filter(e => e.status != STATUS.aborted)
+                                                                .every(e => e.isActive);
 
           if (isHost && hasGameStarted && hasAllPlayersJoined) {
-            // if a player has atleast 1 card that means the cards were distributed.
+            // if Host player has atleast 1 card that means the cards were distributed.
             const isCardsAlreadyDistributed: boolean = !!room.game.players[0].cards.length;
 
             if (!isCardsAlreadyDistributed) {

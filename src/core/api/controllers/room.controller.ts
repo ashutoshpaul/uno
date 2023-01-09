@@ -1,14 +1,24 @@
 import { Request, Response } from "express";
 import { Socket } from "socket.io";
 import { socketIO } from "./../../../app";
-import { ICreateRoomPayload, IJoinedPlayersResponse, IJoinRoomPayload, IJoinRoomResponse, ILobbyRoomResponse, IPlayerLeftRoomResponse, IPlayerRemovedResponse, IPlayerRemovePayload } from "src/core/interfaces/response.interface";
-import { IMinifiedIdentity, IMinifiedPlayer, IMinifiedRoom } from "src/core/interfaces/minified.interface";
-import { IRoom } from "src/core/interfaces/room.interface";
+import { 
+  ICreateRoomPayload, 
+  IJoinedPlayersResponse, 
+  IJoinRoomPayload, 
+  IJoinRoomResponse, 
+  ILobbyRoomResponse, 
+  IPlayerLeftRoomResponse, 
+  IPlayerRemovedResponse, 
+  IPlayerRemovePayload 
+} from "./../../interfaces/response.interface";
+import { IMinifiedIdentity, IMinifiedPlayer, IMinifiedRoom } from "./../../interfaces/minified.interface";
+import { IRoom } from "./../../interfaces/room.interface";
 import { RoomService } from "./../../services/room.service";
 import { PlayerService } from "./../../services/player.service";
 import { WebsocketCommunication } from "./../../websocket/communication/websocket.communication";
 import { RESPONSE_EVENTS } from "./../../enums/response-events.enum";
-import { IPlayer } from "src/core/interfaces/player.interface";
+import { IPlayer } from "./../../interfaces/player.interface";
+import { STATUS } from "./../../enums/status.enum";
 
 const Redis = require("ioredis");
 
@@ -28,6 +38,7 @@ export class RoomController {
           players: room.game.players.map(player => <IMinifiedPlayer>{
             id: player.id,
             name: player.name,
+            status: player.status,
           }),
           name: room.name,
         };
@@ -66,13 +77,12 @@ export class RoomController {
 
         const clientSocket = socketIO.sockets.sockets.get(socketId);
         if (clientSocket) {
-          await redis.hset("identities", (clientSocket as Socket).id, JSON.stringify(identity));
-          await redis.hset("rooms", room.id, JSON.stringify(room));
+          await redis.hset('identities', (clientSocket as Socket).id, JSON.stringify(identity));
+          await redis.hset('rooms', room.id, JSON.stringify(room));
     
           RoomService.joinSocketToRoom(clientSocket as Socket, room.id);
           return res.json(identity);
-        }
-        throw new Error("socket is missing");
+        } else throw new Error("socket is missing");
       } else {
         throw new Error("data and socket-id is required");
       }
@@ -124,11 +134,11 @@ export class RoomController {
   /**
    * Delete a room (only host is allowed to delete his/her created room).
    * 1. Check whether client is host or not. If host then Step 2.
-   * 2. Delete room from the REDIS database (rooms)
-   * 3. Fetch all players from the REDIS database (identities)
-   * 4. Delete all players connected to the room in 'identities' (delete keys via socketId)
-   * 5. Broadcast 'room-deleted' event to affected room players
-   * 6. In front-end, delete identity of affected room players
+   * 2. Delete room from the REDIS database (rooms).
+   * 3. Fetch all players from the REDIS database (identities).
+   * 4. Delete all players connected to the room in 'identities' (delete keys via socketId).
+   * 5. Broadcast 'room-deleted' event to affected room players.
+   * 6. In front-end, delete identity of affected room players.
    */
   static async deleteRoom(req: Request, res: Response) {
     const roomId: string = req.params.id;
@@ -164,8 +174,7 @@ export class RoomController {
               mappedPlayers.filter((e) => playerIds.includes(e.value.player.id));
 
             const socketIds: string[] = playersToBeDeleted.map(e => e.key);
-            console.log(playersToBeDeleted, socketIds);
-
+            
             await redis.hdel('identities', socketIds);
             console.log("socket-ids deleted");
 
@@ -204,8 +213,7 @@ export class RoomController {
         if (room) {
           const createdBy: IMinifiedPlayer = room.createdBy;
 
-          const playerLeavingRoom: IMinifiedIdentity = 
-            JSON.parse(await redis.hget('identities', socketId));
+          const playerLeavingRoom: IMinifiedIdentity = JSON.parse(await redis.hget('identities', socketId));
 
           if (playerLeavingRoom && 
             playerLeavingRoom.player.id != createdBy.id) {
@@ -230,6 +238,7 @@ export class RoomController {
                     players: room.game.players.map(player => <IMinifiedPlayer>{
                       id: player.id,
                       name: player.name,
+                      status: player.status,
                     }),
                     name: room.name,
                   }
@@ -239,10 +248,11 @@ export class RoomController {
 
                 // if game already started then send RESPONSE_EVENTS.gameJoined with IJoinedPlayersResponse
                 if (room.game.isGameStarted) {
-                  const joinedPlayersCount: number = room.game.players.filter(e => e.isActive).length || 0;
+                  const joinedPlayersCount: number = room.game.players.filter(e => e.isActive && e.status != STATUS.aborted).length || 0;
+                  const totalAvailablePlayers: number = room.game.players.filter(e => e.status != STATUS.aborted).length || 0;
                   const joinedPlayersResponse: IJoinedPlayersResponse = {
                     joinedPlayersCount: joinedPlayersCount,
-                    totalPlayersCount: room.game.players.length,
+                    totalPlayersCount: totalAvailablePlayers,
                   };
                   WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.gameJoined, joinedPlayersResponse);
                 }
@@ -309,12 +319,17 @@ export class RoomController {
                 players: room.game.players.map(player => <IMinifiedPlayer>{
                   id: player.id,
                   name: player.name,
+                  status: player.status,
                 }),
                 name: room.name,
               };
               const response: IPlayerRemovedResponse = {
                 actionPlayer: data.actionPlayer.name,
-                playerRemoved: { id: playerToBeDeleted.id, name: playerToBeDeleted.name },
+                playerRemoved: {
+                  id: playerToBeDeleted.id,
+                  name: playerToBeDeleted.name,
+                  status: playerToBeDeleted.status,
+                },
                 room: lobbyRoom,
               };
               console.log('player removed');
@@ -322,10 +337,11 @@ export class RoomController {
 
               // if game already started then send RESPONSE_EVENTS.gameJoined with IJoinedPlayersResponse
               if (room.game.isGameStarted) {
-                const joinedPlayersCount: number = room.game.players.filter(e => e.isActive).length || 0;
+                const joinedPlayersCount: number = room.game.players.filter(e => e.isActive && e.status != STATUS.aborted).length || 0;
+                const totalAvailablePlayers: number = room.game.players.filter(e => e.status != STATUS.aborted).length || 0;
                 const joinedPlayersResponse: IJoinedPlayersResponse = {
                   joinedPlayersCount: joinedPlayersCount,
-                  totalPlayersCount: room.game.players.length,
+                  totalPlayersCount: totalAvailablePlayers,
                 };
                 WebsocketCommunication.emit(clientSocket, room.id, RESPONSE_EVENTS.gameJoined, joinedPlayersResponse);
               }

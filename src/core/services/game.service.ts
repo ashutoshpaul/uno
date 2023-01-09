@@ -51,7 +51,7 @@ export class GameService {
       updatedGame.currentColor = lastDrawnCard.data.color != COLOR_CODE.black ? lastDrawnCard.data.color : undefined;
       updatedGame.currentDirection = game.currentDirection ? game.currentDirection : DIRECTION.clockwise;
       
-      // handles reverse-action on firstDrawnCard. TODO: habdle other actions like +4, change-color, etc.
+      // handles reverse-action on firstDrawnCard. TODO: handle other actions like +4, change-color, etc.
       if (lastDrawnCard.type == CARD_TYPE.action && (lastDrawnCard.data as IActionCard).action == CARD_ACTION.reverse) {
         updatedGame.currentDirection = game.currentDirection == DIRECTION.clockwise
           ? DIRECTION.antiClockwise

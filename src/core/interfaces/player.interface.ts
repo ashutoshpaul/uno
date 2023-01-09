@@ -1,4 +1,5 @@
 import { PLAYER_POSITION } from "../enums/player-position.enum";
+import { STATUS } from "../enums/status.enum";
 import { ICard } from "./card-interfaces/card.interface";
 import { IMinifiedPlayer } from "./minified.interface";
 
@@ -8,10 +9,12 @@ export interface IPlayer {
   score: number;
 
   /**
-   * false (default) when the player is removed from the game. Set to true when player enters the game
+   * false (default) when the player is removed from the game and aborted. Set to true when player enters the game.
    *  */
   isActive: boolean;
 
+  
+  status: STATUS;
   cards: ICard[];  // cards in the player's cards tray.
   isCardLeft: boolean; // false when the player has played all his/her cards
 }
@@ -27,10 +30,11 @@ export interface ISecuredPlayer {
   score: number;
 
   /**
-   * false (default) when the player is removed from the game. Set to true when player enters the game
+   * false (default) when the player is removed from the game and aborted. Set to true when player enters the game
    *  */
   isActive: boolean;
 
+  status: STATUS;
   cardsCount: number;  // cards in the player's cards tray.
   isCardLeft: boolean; // false when the player has played all his/her cards
 }

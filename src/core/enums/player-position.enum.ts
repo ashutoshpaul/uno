@@ -5,4 +5,4 @@ export enum PLAYER_POSITION {
   bottom = 'bottom', // me
 }
 
-export type UnoPositionType = Exclude<PLAYER_POSITION, PLAYER_POSITION.bottom>;
+export type PlayerYelledUnoPositionType = Exclude<PLAYER_POSITION, PLAYER_POSITION.bottom>;

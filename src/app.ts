@@ -7,7 +7,7 @@ import * as websocketSetup from './websocket.setup';
 import * as routeSetup from './route.setup';
 import { Server, Socket } from 'socket.io';
 import { RESPONSE_EVENTS } from './core/enums/response-events.enum';
-import { WebsocketCommunication } from './core/websocket/communication/websocket.communication';
+import { WebsocketListeners } from "./core/websocket/communication/websocket.listners";
 
 dotenv.config();
 
@@ -30,7 +30,11 @@ socketIO.sockets.on('connection', (socket: Socket) => {
 
   socket.emit(RESPONSE_EVENTS.connectionEstablished, socket.id);
 
-  WebsocketCommunication.registerEvents(socket);
+  WebsocketListeners.registerListnerEvents(socket);
 });
 
 export {redisClient, socketIO };
+
+
+// ngrok tcp 3000
+// ngrok http 3000 (don't use this one)

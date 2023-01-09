@@ -8,11 +8,7 @@ import { WebsocketCommunication } from "../websocket/communication/websocket.com
 import { GAME_EVENTS } from "../enums/game-events.enum";
 import { IDistributeCardsWebsocketResponse } from "../interfaces/response.interface";
 import { PLAYER_POSITION } from "../enums/player-position.enum";
-
-interface IPlayerSocket {
-  playerId: string;
-  socketId: string;
-}
+import { IPlayerSocket } from "../interfaces/player-socket.interface";
 
 /**
  * * Handles emitting events from-single-player|backend to single|multiple-players once the game has started.
@@ -56,7 +52,7 @@ export class GameMapService {
    * * After this event, 'discard-first-card' is invoked.
    */
   public static async broadcastGameStateOnDistributeCards(room: IRoom) {
-    const playerSockets: IPlayerSocket[] = await GameMapService._fetchSocketIds(room.game.players);
+    const playerSockets: IPlayerSocket[] = await GameMapService.fetchSocketIds(room.game.players);
 
     playerSockets.forEach(e => {
       const mappedGame: IMappedGame = {
@@ -71,10 +67,7 @@ export class GameMapService {
       if (clientSocket) {
         WebsocketCommunication.emitToSocket(clientSocket, GAME_EVENTS.distributeCards, response);
         console.log('event emitted to ' + e.socketId);
-      } else {
-        // TODO remove error part if creates further breakdown
-        throw new Error("broadcastGameStateOnDistributeCards() socket ("+ e.socketId +") is missing!");
-      }
+      } else console.log("broadcastGameStateOnDistributeCards() socket ("+ e.socketId +") is missing! <not an error>");
     });
   }
 
@@ -90,7 +83,7 @@ export class GameMapService {
    * Usecase: On discardFirstCard after cards-distributed.
    */
   public static async broadcastDiscardFirstCardEvent(game: IGame) {
-    const playerSockets: IPlayerSocket[] = await GameMapService._fetchSocketIds(game.players);
+    const playerSockets: IPlayerSocket[] = await GameMapService.fetchSocketIds(game.players);
 
     if (game.lastDrawnCard) {
       const response: IMappedGameChanges = {
@@ -103,13 +96,22 @@ export class GameMapService {
         const clientSocket = socketIO.sockets.sockets.get(e.socketId);
         if (clientSocket) {
           WebsocketCommunication.emitToSocket(clientSocket, GAME_EVENTS.discardFirstCard, response);
-        } else {
-          // TODO remove error part if creates further breakdown
-          throw new Error("broadcastDiscardFirstCardEvent() socket ("+ e.socketId +") is missing!");
-        }
+        } else console.log("broadcastDiscardFirstCardEvent() socket ("+ e.socketId +") is missing!");
       });
 
     } else { throw new Error("lastDrawnCard is not present!"); }
+  }
+
+  static async fetchSocketIds(players: IPlayer[]): Promise<IPlayerSocket[]> {
+    const playerSockets: IPlayerSocket[] = [];
+    const socketIds: string[] = await RoomService.getSocketIds(players.map(e => e.id));
+    let index: number = 0;
+    for (let socketId of socketIds) {
+      if (socketId) playerSockets.push({playerId: players[index].id, socketId: socketId });
+      else throw new Error('fetchSocketIds > socketId not found!');
+      index++;
+    }
+    return playerSockets;
   }
 
   /**
@@ -194,16 +196,6 @@ export class GameMapService {
       name: player.name,
       score: player.score,
     };
-  }
-
-  private static async _fetchSocketIds(players: IPlayer[]): Promise<IPlayerSocket[]> {
-    const playerSockets: IPlayerSocket[] = [];
-    for (let player of players) {
-      const socketId: string | null = await RoomService.getSocketId(player.id);
-      if (socketId) playerSockets.push({playerId: player.id, socketId: socketId });
-      else throw new Error('broadcastGameStateOnDistributeCards > socketId not found!');
-    }
-    return playerSockets;
   }
 
   private static _getHostPosition(room: IRoom, mappedGame: IMappedGame): PLAYER_POSITION {

@@ -1,3 +1,4 @@
+import { STATUS } from "../enums/status.enum";
 import { Uuid } from "../helpers/uuid.helper";
 import { IMinifiedIdentity } from "../interfaces/minified.interface";
 import { IPlayer } from "../interfaces/player.interface";
@@ -10,6 +11,7 @@ export class PlayerService {
       player: {
         id: player.id,
         name: player.name,
+        status: player.status,
       },
       room: {
         id: room.id,
@@ -27,17 +29,16 @@ export class PlayerService {
       isActive: false,
       name: playerName,
       score: 0,
+      status: STATUS.online,
       isCardLeft: false,
     };
   }
 
   public static setPlayerActive(room: IRoom, identity: IMinifiedIdentity, isActive: boolean = true): IRoom {
-    const player: IPlayer | undefined = room.game.players.find(e => identity.player.id == e.id);
     const index: number = room.game.players.findIndex(e => identity.player.id == e.id);
-    if (player && index != -1) {
-      player.isActive = isActive;
-      room.game.players[index] = player;
-    } else { throw new Error('Player not found'); }
+    
+    if (index != -1) room.game.players[index].isActive = isActive;
+    else throw new Error('Player not found');
     
     return room;
   }
